@@ -28,3 +28,28 @@ Archivos principales:
     parser.y: Reglas de gramática y análisis sintáctico.
     translator.c: Lógica para traducir fórmulas químicas a texto.
     Makefile: Para compilar y enlazar el proyecto con gcc.
+
+
+ARCHIVO : PARSER.Y
+
+------ REGLAS GRAMATICALES NECESARIAS ------------------------------------------------------------
+
+1. Fórmulas Simples
+
+    Una fórmula básica puede consistir en un único elemento con o sin subíndice.
+
+2. Fórmulas Compuestas
+
+    Una fórmula puede ser una secuencia de elementos con subíndices opcionales
+
+3. Fórmulas con Paréntesis
+
+    Los paréntesis se utilizan para agrupar partes de la fórmula que se repiten.
+
+4. Grupos Repetidos
+
+    Si dentro de los paréntesis hay un grupo de elementos, se procesan recursivamente.
+
+5. Fórmulas Complejas
+
+    Combinar fórmulas simples, paréntesis, y números para manejar compuestos avanzados.
