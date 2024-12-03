@@ -1,0 +1,21 @@
+TRADUCTOR DE EXPRESIONES QUÍMICAS A TEXTO 
+
+1. Diseño del programa
+
+El objetivo es tomar una fórmula química como entrada, analizarla y generar un texto explicativo que describa los componentes de la fórmula. Ejemplo:
+Entrada: H2O
+Salida: "Dihidrógeno Monóxido"
+
+2. Componentes del proyecto
+a) Análisis léxico (Flex)
+
+Define tokens básicos como elementos químicos, subíndices, paréntesis, etc.
+b) Análisis sintáctico (Bison)
+
+Define las reglas gramaticales para reconocer fórmulas válidas.
+c) Generación de código de salida
+
+Traduce la fórmula al texto explicativo usando funciones auxiliares.
+d) Comprobación de errores
+
+Incluye detección de fórmulas inválidas o elementos no reconocidos.
