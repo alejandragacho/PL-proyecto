@@ -19,3 +19,12 @@ Traduce la fórmula al texto explicativo usando funciones auxiliares.
 d) Comprobación de errores
 
 Incluye detección de fórmulas inválidas o elementos no reconocidos.
+
+3. Estructura del proyecto
+
+Archivos principales:
+
+    lexer.l: Definición del análisis léxico.
+    parser.y: Reglas de gramática y análisis sintáctico.
+    translator.c: Lógica para traducir fórmulas químicas a texto.
+    Makefile: Para compilar y enlazar el proyecto con gcc.
