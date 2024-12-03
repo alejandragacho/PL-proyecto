@@ -69,18 +69,7 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-union YYSTYPE
-{
-#line 13 "proyecto.y"
-
-    char* str;
-    int num;
-    Componente componente;
-
-#line 81 "proyecto.tab.h"
-
-};
-typedef union YYSTYPE YYSTYPE;
+typedef int YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

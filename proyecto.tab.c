@@ -73,13 +73,23 @@
 #include <stdlib.h>
 #include <string.h>
 
+void yyerror(const char *s);
+extern int yylex();
+
 typedef struct {
-    char* simbolo;
-    int cantidad;
-} Componente;
+    char *str;
+    int num;
+} YYSTYPE;
 
+#define YYSTYPE YYSTYPE
 
-#line 83 "proyecto.tab.c"
+/* Declaración de funciones auxiliares */
+char* describe(const char* elemento, int numero);
+char* concat(const char* str1, const char* str2, const char* str3);
+char* prefijo(int numero);
+char* 
+
+#line 93 "proyecto.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -113,8 +123,9 @@ enum yysymbol_kind_t
   YYSYMBOL_ELEMENTO = 3,                   /* ELEMENTO  */
   YYSYMBOL_SUBINDICE = 4,                  /* SUBINDICE  */
   YYSYMBOL_YYACCEPT = 5,                   /* $accept  */
-  YYSYMBOL_formula = 6,                    /* formula  */
-  YYSYMBOL_compuesto = 7                   /* compuesto  */
+  YYSYMBOL_inicio = 6,                     /* inicio  */
+  YYSYMBOL_formula = 7,                    /* formula  */
+  YYSYMBOL_compuesto = 8                   /* compuesto  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -440,18 +451,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  5
+#define YYFINAL  6
 /* YYLAST -- Last index in YYTABLE.  */
 #define YYLAST   3
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  5
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  3
+#define YYNNTS  4
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  5
+#define YYNRULES  6
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  7
+#define YYNSTATES  8
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   259
@@ -500,7 +511,7 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    27,    27,    28,    32,    33
+       0,    29,    29,    33,    34,    38,    39
 };
 #endif
 
@@ -517,7 +528,7 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "ELEMENTO",
-  "SUBINDICE", "$accept", "formula", "compuesto", YY_NULLPTR
+  "SUBINDICE", "$accept", "inicio", "formula", "compuesto", YY_NULLPTR
 };
 
 static const char *
@@ -541,7 +552,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,    -2,     1,    -3,    -4,    -4,    -4
+      -3,    -2,     1,    -4,    -3,    -4,    -4,    -4
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -549,19 +560,19 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     5,     0,     2,     4,     1,     3
+       0,     6,     0,     2,     3,     5,     1,     4
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -4,     0,    -4
+      -4,    -4,    -1,    -4
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     3
+       0,     2,     3,     4
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -569,31 +580,31 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       1,     5,     4,     6
+       1,     6,     5,     7
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,     0,     4,     3
+       3,     0,     4,     4
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     6,     7,     4,     0,     6
+       0,     3,     6,     7,     8,     4,     0,     7
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,     5,     6,     6,     7,     7
+       0,     5,     6,     7,     7,     8,     8
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     2,     2,     1
+       0,     2,     1,     1,     2,     2,     1
 };
 
 
@@ -1056,32 +1067,32 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 2: /* formula: compuesto  */
-#line 27 "proyecto.y"
-              { imprimir_componente((yyvsp[0].componente)); }
-#line 1063 "proyecto.tab.c"
+  case 2: /* inicio: formula  */
+#line 29 "proyecto.y"
+            { printf("Resultado: %s\n", yyval); }
+#line 1074 "proyecto.tab.c"
     break;
 
-  case 3: /* formula: compuesto formula  */
-#line 28 "proyecto.y"
-                        { imprimir_componente((yyvsp[-1].componente)); }
-#line 1069 "proyecto.tab.c"
+  case 4: /* formula: compuesto formula  */
+#line 34 "proyecto.y"
+                        { yyval = concat(yyvsp[-1], " y ", yyvsp[0]); }
+#line 1080 "proyecto.tab.c"
     break;
 
-  case 4: /* compuesto: ELEMENTO SUBINDICE  */
-#line 32 "proyecto.y"
-                       { (yyval.componente) = (Componente){ (yyvsp[-1].str), (yyvsp[0].num) }; }
-#line 1075 "proyecto.tab.c"
+  case 5: /* compuesto: ELEMENTO SUBINDICE  */
+#line 38 "proyecto.y"
+                       { yyval = describe(yyvsp[-1], yyvsp[0]); }
+#line 1086 "proyecto.tab.c"
     break;
 
-  case 5: /* compuesto: ELEMENTO  */
-#line 33 "proyecto.y"
-                       { (yyval.componente) = (Componente){ (yyvsp[0].str), 1 }; }
-#line 1081 "proyecto.tab.c"
+  case 6: /* compuesto: ELEMENTO  */
+#line 39 "proyecto.y"
+               { yyval = describe(yyvsp[0], 1); }
+#line 1092 "proyecto.tab.c"
     break;
 
 
-#line 1085 "proyecto.tab.c"
+#line 1096 "proyecto.tab.c"
 
       default: break;
     }
@@ -1274,71 +1285,102 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 36 "proyecto.y"
+#line 42 "proyecto.y"
 
+char* get_componente(const char* simbolo) {
+    if (strcmp(simbolo, "H") == 0) return("Hidrógeno ");
+    else if (strcmp(simbolo, "He") == 0) return("Helio ");
+    else if (strcmp(simbolo, "Li") == 0) return("Litio ");
+    else if (strcmp(simbolo, "Be") == 0) return("Berilio ");
+    else if (strcmp(simbolo, "B") == 0) return("Boro ");
+    else if (strcmp(simbolo, "C") == 0) return("Carbono ");
+    else if (strcmp(simbolo, "N") == 0) return("Nitrógeno ");
+    else if (strcmp(simbolo, "O") == 0) return("Oxígeno ");
+    else if (strcmp(simbolo, "F") == 0) return("Flúor ");
+    else if (strcmp(simbolo, "Ne") == 0) return("Neón ");
+    else if (strcmp(simbolo, "Na") == 0) return("Sodio ");
+    else if (strcmp(simbolo, "Mg") == 0) return("Magnesio ");
+    else if (strcmp(simbolo, "Al") == 0) return("Aluminio ");
+    else if (strcmp(simbolo, "Si") == 0) return("Silicio ");
+    else if (strcmp(simbolo, "P") == 0) return("Fósforo ");
+    else if (strcmp(simbolo, "S") == 0) return("Azufre ");
+    else if (strcmp(simbolo, "Cl") == 0) return("Cloro ");
+    else if (strcmp(simbolo, "Ar") == 0) return("Argón ");
+    else if (strcmp(simbolo, "K") == 0) return("Potasio ");
+    else if (strcmp(simbolo, "Ca") == 0) return("Calcio ");
+    else if (strcmp(simbolo, "Sc") == 0) return("Escandio ");
+    else if (strcmp(simbolo, "Ti") == 0) return("Titanio ");
+    else if (strcmp(simbolo, "V") == 0) return("Vanadio ");
+    else if (strcmp(simbolo, "Cr") == 0) return("Cromo ");
+    else if (strcmp(simbolo, "Mn") == 0) return("Manganeso ");
+    else if (strcmp(simbolo, "Fe") == 0) return("Hierro ");
+    else if (strcmp(simbolo, "Co") == 0) return("Cobalto ");
+    else if (strcmp(simbolo, "Ni") == 0) return("Níquel ");
+    else if (strcmp(simbolo, "Cu") == 0) return("Cobre ");
+    else if (strcmp(simbolo, "Zn") == 0) return("Zinc ");
+    else if (strcmp(simbolo, "Ga") == 0) return("Galio ");
+    else if (strcmp(simbolo, "Ge") == 0) return("Germanio ");
+    else if (strcmp(simbolo, "As") == 0) return("Arsénico ");
+    else if (strcmp(simbolo, "Se") == 0) return("Selenio ");
+    else if (strcmp(simbolo, "Br") == 0) return("Bromo ");
+    else if (strcmp(simbolo, "Kr") == 0) return("Kriptón ");
+    else if (strcmp(simbolo, "Rb") == 0) return("Rubidio ");
+    else if (strcmp(simbolo, "Sr") == 0) return("Estroncio ");
+    else if (strcmp(simbolo, "Y") == 0) return("Itrio ");
+    else if (strcmp(simbolo, "Zr") == 0) return("Circonio ");
+    else if (strcmp(simbolo, "Mo") == 0) return("Molibdeno ");
+    else if (strcmp(simbolo, "Pd") == 0) return("Paladio ");
+    else if (strcmp(simbolo, "Ag") == 0) return("Plata ");
+    else if (strcmp(simbolo, "Cd") == 0) return("Cadmio ");
+    else if (strcmp(simbolo, "Sn") == 0) return("Estaño ");
+    else if (strcmp(simbolo, "I") == 0) return("Yodo ");
+    else if (strcmp(simbolo, "Xe") == 0) return("Xenón ");
+    else if (strcmp(simbolo, "Cs") == 0) return("Cesio ");
+    else if (strcmp(simbolo, "Ba") == 0) return("Bario ");
+    else if (strcmp(simbolo, "Pt") == 0) return("Platino ");
+    else return("%s ", simbolo);
 
-// Función para traducir los elementos a texto explicativo
-void imprimir_componente(Componente componente) {
-    if (strcmp(componente.simbolo, "H") == 0) printf("Hidrógeno ");
-    else if (strcmp(componente.simbolo, "He") == 0) printf("Helio ");
-    else if (strcmp(componente.simbolo, "Li") == 0) printf("Litio ");
-    else if (strcmp(componente.simbolo, "Be") == 0) printf("Berilio ");
-    else if (strcmp(componente.simbolo, "B") == 0) printf("Boro ");
-    else if (strcmp(componente.simbolo, "C") == 0) printf("Carbono ");
-    else if (strcmp(componente.simbolo, "N") == 0) printf("Nitrógeno ");
-    else if (strcmp(componente.simbolo, "O") == 0) printf("Oxígeno ");
-    else if (strcmp(componente.simbolo, "F") == 0) printf("Flúor ");
-    else if (strcmp(componente.simbolo, "Ne") == 0) printf("Neón ");
-    else if (strcmp(componente.simbolo, "Na") == 0) printf("Sodio ");
-    else if (strcmp(componente.simbolo, "Mg") == 0) printf("Magnesio ");
-    else if (strcmp(componente.simbolo, "Al") == 0) printf("Aluminio ");
-    else if (strcmp(componente.simbolo, "Si") == 0) printf("Silicio ");
-    else if (strcmp(componente.simbolo, "P") == 0) printf("Fósforo ");
-    else if (strcmp(componente.simbolo, "S") == 0) printf("Azufre ");
-    else if (strcmp(componente.simbolo, "Cl") == 0) printf("Cloro ");
-    else if (strcmp(componente.simbolo, "Ar") == 0) printf("Argón ");
-    else if (strcmp(componente.simbolo, "K") == 0) printf("Potasio ");
-    else if (strcmp(componente.simbolo, "Ca") == 0) printf("Calcio ");
-    else if (strcmp(componente.simbolo, "Sc") == 0) printf("Escandio ");
-    else if (strcmp(componente.simbolo, "Ti") == 0) printf("Titanio ");
-    else if (strcmp(componente.simbolo, "V") == 0) printf("Vanadio ");
-    else if (strcmp(componente.simbolo, "Cr") == 0) printf("Cromo ");
-    else if (strcmp(componente.simbolo, "Mn") == 0) printf("Manganeso ");
-    else if (strcmp(componente.simbolo, "Fe") == 0) printf("Hierro ");
-    else if (strcmp(componente.simbolo, "Co") == 0) printf("Cobalto ");
-    else if (strcmp(componente.simbolo, "Ni") == 0) printf("Níquel ");
-    else if (strcmp(componente.simbolo, "Cu") == 0) printf("Cobre ");
-    else if (strcmp(componente.simbolo, "Zn") == 0) printf("Zinc ");
-    else if (strcmp(componente.simbolo, "Ga") == 0) printf("Galio ");
-    else if (strcmp(componente.simbolo, "Ge") == 0) printf("Germanio ");
-    else if (strcmp(componente.simbolo, "As") == 0) printf("Arsénico ");
-    else if (strcmp(componente.simbolo, "Se") == 0) printf("Selenio ");
-    else if (strcmp(componente.simbolo, "Br") == 0) printf("Bromo ");
-    else if (strcmp(componente.simbolo, "Kr") == 0) printf("Kriptón ");
-    else if (strcmp(componente.simbolo, "Rb") == 0) printf("Rubidio ");
-    else if (strcmp(componente.simbolo, "Sr") == 0) printf("Estroncio ");
-    else if (strcmp(componente.simbolo, "Y") == 0) printf("Itrio ");
-    else if (strcmp(componente.simbolo, "Zr") == 0) printf("Circonio ");
-    else if (strcmp(componente.simbolo, "Mo") == 0) printf("Molibdeno ");
-    else if (strcmp(componente.simbolo, "Pd") == 0) printf("Paladio ");
-    else if (strcmp(componente.simbolo, "Ag") == 0) printf("Plata ");
-    else if (strcmp(componente.simbolo, "Cd") == 0) printf("Cadmio ");
-    else if (strcmp(componente.simbolo, "Sn") == 0) printf("Estaño ");
-    else if (strcmp(componente.simbolo, "I") == 0) printf("Yodo ");
-    else if (strcmp(componente.simbolo, "Xe") == 0) printf("Xenón ");
-    else if (strcmp(componente.simbolo, "Cs") == 0) printf("Cesio ");
-    else if (strcmp(componente.simbolo, "Ba") == 0) printf("Bario ");
-    else if (strcmp(componente.simbolo, "Pt") == 0) printf("Platino ");
-    else printf("%s ", componente.simbolo);
-
-    if (componente.cantidad > 1) {
-        printf("(x%d) ", componente.cantidad);
-    }
-    printf("\n");
 }
 
-int main() {
-    printf("Introduce una fórmula química:\n");
-    yyparse();
-    return 0;
+/* Función auxiliar para describir un elemento con su subíndice */
+char* describe(const char* componente, int numero) {
+    char* resultado = (char*)malloc(100);
+    const char* elemento = get_componente(componente);
+    const char* pref = prefijo(numero);
+    if (numero > 1) {
+        sprintf(resultado, "%s%s", pref, elemento);
+    } else {
+        sprintf(resultado, "%s", elemento);
+    }
+    return resultado;
+}
+
+/* Función para generar prefijos numéricos en texto */
+char* prefijo(int numero) {
+    switch (numero) {
+        case 1: return "Mono";
+        case 2: return "Di";
+        case 3: return "Tri";
+        case 4: return "Tetra";
+        case 5: return "Penta";
+        case 6: return "Hexa";
+        case 7: return "Hepta";
+        case 8: return "Octa";
+        case 9: return "Nona";
+        case 10: return "Deca";
+        default: return ""; // Para números fuera del rango
+    }
+}
+
+/* Función auxiliar para concatenar cadenas */
+char* concat(const char* str1, const char* str2, const char* str3) {
+    char* resultado = (char*)malloc(strlen(str1) + strlen(str2) + strlen(str3) + 1);
+    strcpy(resultado, str1);
+    strcat(resultado, str2);
+    strcat(resultado, str3);
+    return resultado;
+}
+
+void yyerror(const char *s) {
+    fprintf(stderr, "Error: %s\n", s);
 }
