@@ -15,7 +15,7 @@ char* concat(const char* str1, const char* str2, const char* str3);
 char* prefijo(int numero);
 char* 
 %}
-%define parse.error verbose
+%error-verbose
 %union {
     char* str;
     int num;
