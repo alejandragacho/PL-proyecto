@@ -83,7 +83,7 @@ extern int yylineno;
 char* describe(char* elemento, int numero);
 char* concat(const char* str1, const char* str2, const char* str3);
 char* prefijo(int numero);
-char* 
+
 
 #line 89 "proyecto.tab.c"
 
@@ -1577,6 +1577,7 @@ yyreturnlab:
 }
 
 #line 43 "proyecto.y"
+
 
 char* get_componente(char* simbolo) {
     if (strcmp(simbolo, "H") == 0) return("Hidrógeno ");

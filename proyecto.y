@@ -13,9 +13,9 @@ extern int yylineno;
 char* describe(char* elemento, int numero);
 char* concat(const char* str1, const char* str2, const char* str3);
 char* prefijo(int numero);
-char* 
+
 %}
-%define parse.error verbose
+%error-verbose
 %union {
     char* str;
     int num;
@@ -41,6 +41,7 @@ compuesto:
 ;
 
 %%
+
 char* get_componente(char* simbolo) {
     if (strcmp(simbolo, "H") == 0) return("Hidrógeno ");
     else if (strcmp(simbolo, "He") == 0) return("Helio ");
