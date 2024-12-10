@@ -22,17 +22,23 @@ char* prefijo(int numero);
 }
 %token <str> ELEMENTO
 %token <num> SUBINDICE
+%token SALTO
 %type <str> compuesto
 %start S
 %%
 
 S:
-    formula { printf("Fin \n"); return 0;}
+    fichero { printf("Fin \n"); return 0;}
+;
+
+fichero:
+    formula
+    | formula SALTO fichero  {printf("FORMULA %d\n", yylineno);}
 ;
 
 formula:
     compuesto
-    | compuesto formula 
+    | compuesto formula  {printf("FORMULA %d\n", yylineno);}
 ;
 
 compuesto:
@@ -129,9 +135,11 @@ char* prefijo(int numero) {
 
 /* Función auxiliar para concatenar cadenas */
 char* concat(const char* str1, const char* str2, const char* str3) {
-    char* resultado = (char*)malloc(strlen(str1) + strlen(str2) + strlen(str3) + 1);
+    const char* strde = "de";
+    char* resultado = (char*)malloc(strlen(str1) + strlen(str2) + strlen(strde) + strlen(str3) + 1);
     strcpy(resultado, str1);
     strcat(resultado, str2);
+    strcat(resultado, strde);
     strcat(resultado, str3);
     return resultado;
 }
