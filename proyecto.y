@@ -33,15 +33,21 @@ S:
 
 fichero:
     formula
-    | formula SALTO fichero  {printf("FORMULA %d\n", yylineno);}
+    | formula SALTO fichero 
 ;
 
 formula:
     compuesto
-    | compuesto formula  {printf("FORMULA %d\n", yylineno);}
+    | compuesto formula
 ;
 
 compuesto:
+    ELEMENTO SUBINDICE ELEMENTO { 
+        char* descripcion = concat(describe($1, $2), "de ", describe($3, 1));
+        printf("%s\n", descripcion); 
+        free(descripcion); 
+    }
+    |
     ELEMENTO SUBINDICE { printf("%s \n", describe($1, $2)); }
     | ELEMENTO {  printf("%s \n", describe($1, 1)); }
 ;
@@ -135,11 +141,9 @@ char* prefijo(int numero) {
 
 /* Función auxiliar para concatenar cadenas */
 char* concat(const char* str1, const char* str2, const char* str3) {
-    const char* strde = "de";
-    char* resultado = (char*)malloc(strlen(str1) + strlen(str2) + strlen(strde) + strlen(str3) + 1);
+    char* resultado = (char*)malloc(strlen(str1) + strlen(str2) + strlen(str3) + 1);
     strcpy(resultado, str1);
     strcat(resultado, str2);
-    strcat(resultado, strde);
     strcat(resultado, str3);
     return resultado;
 }

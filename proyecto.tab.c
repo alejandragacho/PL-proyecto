@@ -451,16 +451,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  7
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   5
+#define YYLAST   10
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  6
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  5
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  8
+#define YYNRULES  9
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  11
+#define YYNSTATES  12
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   260
@@ -510,7 +510,7 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    31,    31,    35,    36,    40,    41,    45,    46
+       0,    31,    31,    35,    36,    40,    41,    45,    51,    52
 };
 #endif
 
@@ -537,7 +537,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-6)
+#define YYPACT_NINF (-4)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -551,8 +551,8 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,    -2,     1,    -6,    -1,    -3,    -6,    -6,    -3,    -6,
-      -6
+      -3,    -2,     1,    -4,    -1,    -3,     0,    -4,    -3,    -4,
+      -4,    -4
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -560,14 +560,14 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     8,     0,     2,     3,     5,     7,     1,     0,     6,
-       4
+       0,     9,     0,     2,     3,     5,     8,     1,     0,     6,
+       7,     4
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -6,    -6,    -5,     0,    -6
+      -4,    -4,     2,     3,    -4
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -581,12 +581,14 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       1,     7,     6,    10,     8,     9
+       1,     7,     6,    10,     8,     0,     0,     0,     9,     0,
+      11
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,     0,     4,     8,     5,     5
+       3,     0,     4,     3,     5,    -1,    -1,    -1,     5,    -1,
+       8
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -594,19 +596,19 @@ static const yytype_int8 yycheck[] =
 static const yytype_int8 yystos[] =
 {
        0,     3,     7,     8,     9,    10,     4,     0,     5,     9,
-       8
+       3,     8
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,     6,     7,     8,     8,     9,     9,    10,    10
+       0,     6,     7,     8,     8,     9,     9,    10,    10,    10
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     1,     3,     1,     2,     2,     1
+       0,     2,     1,     1,     3,     1,     2,     3,     2,     1
 };
 
 
@@ -1342,29 +1344,27 @@ yyreduce:
   case 2: /* S: fichero  */
 #line 31 "proyecto.y"
             { printf("Fin \n"); return 0;}
-#line 1346 "proyecto.tab.c"
+#line 1348 "proyecto.tab.c"
     break;
 
-  case 4: /* fichero: formula SALTO fichero  */
-#line 36 "proyecto.y"
-                             {printf("FORMULA %d\n", yylineno);}
-#line 1352 "proyecto.tab.c"
-    break;
-
-  case 6: /* formula: compuesto formula  */
-#line 41 "proyecto.y"
-                         {printf("FORMULA %d\n", yylineno);}
+  case 7: /* compuesto: ELEMENTO SUBINDICE ELEMENTO  */
+#line 45 "proyecto.y"
+                                { 
+        char* descripcion = concat(describe((yyvsp[-2].str), (yyvsp[-1].num)), "de ", describe((yyvsp[0].str), 1));
+        printf("%s\n", descripcion); 
+        free(descripcion); 
+    }
 #line 1358 "proyecto.tab.c"
     break;
 
-  case 7: /* compuesto: ELEMENTO SUBINDICE  */
-#line 45 "proyecto.y"
+  case 8: /* compuesto: ELEMENTO SUBINDICE  */
+#line 51 "proyecto.y"
                        { printf("%s \n", describe((yyvsp[-1].str), (yyvsp[0].num))); }
 #line 1364 "proyecto.tab.c"
     break;
 
-  case 8: /* compuesto: ELEMENTO  */
-#line 46 "proyecto.y"
+  case 9: /* compuesto: ELEMENTO  */
+#line 52 "proyecto.y"
                {  printf("%s \n", describe((yyvsp[0].str), 1)); }
 #line 1370 "proyecto.tab.c"
     break;
@@ -1594,7 +1594,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 49 "proyecto.y"
+#line 55 "proyecto.y"
 
 
 char* get_componente(char* simbolo) {
@@ -1684,11 +1684,9 @@ char* prefijo(int numero) {
 
 /* Función auxiliar para concatenar cadenas */
 char* concat(const char* str1, const char* str2, const char* str3) {
-    const char* strde = "de";
-    char* resultado = (char*)malloc(strlen(str1) + strlen(str2) + strlen(strde) + strlen(str3) + 1);
+    char* resultado = (char*)malloc(strlen(str1) + strlen(str2) + strlen(str3) + 1);
     strcpy(resultado, str1);
     strcat(resultado, str2);
-    strcat(resultado, strde);
     strcat(resultado, str3);
     return resultado;
 }
