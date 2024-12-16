@@ -497,10 +497,11 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "proyecto.l"
 #line 2 "proyecto.l"
-#include "proyecto.tab.h"
+#include "proyecto.tab.h"  /* Incluir definiciones de tokens de Bison */
 #include <stdio.h>
 #line 503 "lex.yy.c"
-#line 504 "lex.yy.c"
+/* Definición de patrones */
+#line 505 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -717,10 +718,11 @@ YY_DECL
 		}
 
 	{
-#line 12 "proyecto.l"
+#line 13 "proyecto.l"
 
 
-#line 724 "lex.yy.c"
+
+#line 726 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -789,36 +791,36 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 14 "proyecto.l"
-{ yylval.str = strdup(yytext); printf("ELEMENTO: %s\n", yytext); return ELEMENTO; }
+#line 16 "proyecto.l"
+{ yylval.str = strdup(yytext); return ELEMENTO; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 16 "proyecto.l"
-{ yylval.num = atoi(yytext); printf("SUBINDICE: %s\n", yytext); return SUBINDICE; }
+#line 17 "proyecto.l"
+{ yylval.num = atoi(yytext);  return SUBINDICE; }
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
 #line 18 "proyecto.l"
-{ printf("SALTO: %s\n", yytext); return SALTO;}
+{ return SALTO; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 20 "proyecto.l"
-{ /* Ignorar */ }
+#line 19 "proyecto.l"
+{ }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 22 "proyecto.l"
-{        { fprintf(stderr, "Error léxico: %s en la línea %d\n", yytext, yylineno); } }
+#line 20 "proyecto.l"
+{ fprintf(stderr, "Error léxico: %s en la línea %d\n", yytext, yylineno); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 25 "proyecto.l"
+#line 22 "proyecto.l"
 ECHO;
 	YY_BREAK
-#line 822 "lex.yy.c"
+#line 824 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1835,7 +1837,8 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 25 "proyecto.l"
+#line 22 "proyecto.l"
 
 
 int yywrap() { return 1; }
+

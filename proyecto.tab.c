@@ -72,6 +72,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 void yyerror(const char *s);
 extern int yylex();
@@ -82,9 +83,13 @@ char* describe(char* elemento, int numero);
 char* concat(const char* str1, const char* str2, const char* str3);
 char* prefijo(int numero);
 char* nombre_trivial(const char* compuesto);
+char* hidruro_metalico(const char* compuesto);
+char* es_acido(const char* compuesto);
+char* es_oxido(const char* compuesto);
+char* generar_binario(const char* compuesto);
 
 
-#line 88 "proyecto.tab.c"
+#line 93 "proyecto.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -118,12 +123,14 @@ enum yysymbol_kind_t
   YYSYMBOL_ELEMENTO = 3,                   /* ELEMENTO  */
   YYSYMBOL_SUBINDICE = 4,                  /* SUBINDICE  */
   YYSYMBOL_SALTO = 5,                      /* SALTO  */
-  YYSYMBOL_YYACCEPT = 6,                   /* $accept  */
-  YYSYMBOL_S = 7,                          /* S  */
-  YYSYMBOL_fichero = 8,                    /* fichero  */
-  YYSYMBOL_formula = 9,                    /* formula  */
-  YYSYMBOL_compuesto = 10,                 /* compuesto  */
-  YYSYMBOL_secuencia_elementos = 11        /* secuencia_elementos  */
+  YYSYMBOL_LPAREN = 6,                     /* LPAREN  */
+  YYSYMBOL_RPAREN = 7,                     /* RPAREN  */
+  YYSYMBOL_YYACCEPT = 8,                   /* $accept  */
+  YYSYMBOL_S = 9,                          /* S  */
+  YYSYMBOL_fichero = 10,                   /* fichero  */
+  YYSYMBOL_formula = 11,                   /* formula  */
+  YYSYMBOL_compuesto = 12,                 /* compuesto  */
+  YYSYMBOL_secuencia_elementos = 13        /* secuencia_elementos  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -449,21 +456,21 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  8
+#define YYFINAL  9
 /* YYLAST -- Last index in YYTABLE.  */
 #define YYLAST   7
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  6
+#define YYNTOKENS  8
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  9
+#define YYNRULES  10
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  12
+#define YYNSTATES  13
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   260
+#define YYMAXUTOK   262
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -503,14 +510,15 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5
+       5,     6,     7
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    32,    32,    36,    37,    41,    48,    54,    65,    76
+       0,    38,    38,    42,    43,    47,    54,    87,    94,   100,
+     107
 };
 #endif
 
@@ -527,8 +535,8 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "ELEMENTO",
-  "SUBINDICE", "SALTO", "$accept", "S", "fichero", "formula", "compuesto",
-  "secuencia_elementos", YY_NULLPTR
+  "SUBINDICE", "SALTO", "LPAREN", "RPAREN", "$accept", "S", "fichero",
+  "formula", "compuesto", "secuencia_elementos", YY_NULLPTR
 };
 
 static const char *
@@ -538,7 +546,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-7)
+#define YYPACT_NINF (-6)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -552,8 +560,8 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,    -2,     1,    -7,    -1,    -7,    -7,    -3,    -7,    -3,
-      -7,    -7
+       0,    -2,     4,    -6,     2,    -6,    -6,     0,    -6,    -6,
+       0,    -6,    -6
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -561,14 +569,14 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     9,     0,     2,     3,     5,     6,     8,     1,     0,
-       7,     4
+       0,    10,     0,     2,     3,     5,     6,     8,     9,     1,
+       0,     7,     4
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -7,    -7,    -6,    -7,    -7,     0
+      -6,    -6,    -5,    -6,    -6,    -1
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -582,32 +590,34 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       1,     8,     7,    11,     9,     0,     0,    10
+       8,     1,     7,     1,     9,    12,    11,    10
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,     0,     4,     9,     5,    -1,    -1,     7
+       1,     3,     4,     3,     0,    10,     7,     5
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     7,     8,     9,    10,    11,     4,     0,     5,
-      11,     8
+       0,     3,     9,    10,    11,    12,    13,     4,    13,     0,
+       5,    13,    10
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,     6,     7,     8,     8,     9,    10,    11,    11,    11
+       0,     8,     9,    10,    10,    11,    12,    13,    13,    13,
+      13
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     1,     3,     1,     1,     3,     2,     1
+       0,     2,     1,     1,     3,     1,     1,     3,     2,     2,
+       1
 };
 
 
@@ -1341,71 +1351,100 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* S: fichero  */
-#line 32 "proyecto.y"
+#line 38 "proyecto.y"
             { printf("Fin \n"); return 0;}
-#line 1347 "proyecto.tab.c"
+#line 1357 "proyecto.tab.c"
     break;
 
   case 5: /* formula: compuesto  */
-#line 41 "proyecto.y"
+#line 47 "proyecto.y"
               {
-        printf("Procesando fórmula: %s\n", (yyvsp[0].str));
+        printf("Resultado: %s\n\n", (yyvsp[0].str));
         free((yyvsp[0].str)); // Liberar memoria asignada dinámicamente
     }
-#line 1356 "proyecto.tab.c"
+#line 1366 "proyecto.tab.c"
     break;
 
   case 6: /* compuesto: secuencia_elementos  */
-#line 48 "proyecto.y"
-                        {
-        (yyval.str) = (yyvsp[0].str); // La salida del compuesto es igual a secuencia_elementos
-    }
-#line 1364 "proyecto.tab.c"
-    break;
-
-  case 7: /* secuencia_elementos: ELEMENTO SUBINDICE secuencia_elementos  */
 #line 54 "proyecto.y"
-                                           {
-        printf("Elemento: %s, Subíndice: %d, Resto: %s\n", (yyvsp[-2].str), (yyvsp[-1].num), (yyvsp[0].str) ? (yyvsp[0].str) : "NULL");
-        char compuesto[200];
-        sprintf(compuesto, "%s%d%s", (yyvsp[-2].str), (yyvsp[-1].num), (yyvsp[0].str) ? (yyvsp[0].str) : ""); // Construir la fórmula completa
-        char* nombre_comun = nombre_trivial(compuesto);
-        if (nombre_comun) {
-            (yyval.str) = strdup(nombre_comun); // Usar el nombre trivial si existe
-        } else {
-            (yyval.str) = strdup(compuesto); // Retornar el compuesto construido si no hay nombre trivial
-        }
-    }
-#line 1380 "proyecto.tab.c"
-    break;
+                        {
+        printf("Compuesto recibido: %s\n", (yyvsp[0].str));
 
-  case 8: /* secuencia_elementos: ELEMENTO SUBINDICE  */
-#line 65 "proyecto.y"
-                         {
-        printf("Elemento: %s, Subíndice: %d\n", (yyvsp[-1].str), (yyvsp[0].num));
-        char compuesto[50];
-        sprintf(compuesto, "%s%d", (yyvsp[-1].str), (yyvsp[0].num)); // Construir la fórmula parcial
-        char* nombre_comun = nombre_trivial(compuesto);
+        // 1. Verificar si el compuesto tiene un nombre trivial
+        char* nombre_comun = nombre_trivial((yyvsp[0].str));
         if (nombre_comun) {
             (yyval.str) = strdup(nombre_comun);
         } else {
-            (yyval.str) = strdup(compuesto);
+            // 2. Verificar si es un ácido hidrácido
+            char* acido = es_acido((yyvsp[0].str));
+            if (acido) {
+                (yyval.str) = strdup(acido);
+                free(acido);
+            } else {
+                // 3. Verificar si es un óxido
+                char* oxido = es_oxido((yyvsp[0].str));
+                if (oxido) {
+                    (yyval.str) = strdup(oxido);
+                    free(oxido);
+                } else {
+                    // 4. Si no es ninguna de las anteriores, asumir "–uro de"
+                    char* binario = generar_binario((yyvsp[0].str));
+                    (yyval.str) = strdup(binario);
+                    free(binario);
+                }
+            }
         }
+        free((yyvsp[0].str));
     }
-#line 1396 "proyecto.tab.c"
+#line 1400 "proyecto.tab.c"
     break;
 
-  case 9: /* secuencia_elementos: ELEMENTO  */
-#line 76 "proyecto.y"
+  case 7: /* secuencia_elementos: ELEMENTO SUBINDICE secuencia_elementos  */
+#line 87 "proyecto.y"
+                                           {
+        char compuesto[200];
+        sprintf(compuesto, "%s%d%s", (yyvsp[-2].str), (yyvsp[-1].num), (yyvsp[0].str) ? (yyvsp[0].str) : ""); // Concatenar H2 + S + resto
+        (yyval.str) = strdup(compuesto);
+        free((yyvsp[-2].str));
+        if ((yyvsp[0].str)) free((yyvsp[0].str));
+    }
+#line 1412 "proyecto.tab.c"
+    break;
+
+  case 8: /* secuencia_elementos: ELEMENTO SUBINDICE  */
+#line 94 "proyecto.y"
+                         {
+        char compuesto[50];
+        sprintf(compuesto, "%s%d", (yyvsp[-1].str), (yyvsp[0].num)); // Ejemplo: H2
+        (yyval.str) = strdup(compuesto);
+        free((yyvsp[-1].str));
+    }
+#line 1423 "proyecto.tab.c"
+    break;
+
+  case 9: /* secuencia_elementos: ELEMENTO secuencia_elementos  */
+#line 100 "proyecto.y"
+                                   {
+        char compuesto[200];
+        sprintf(compuesto, "%s%s", (yyvsp[-1].str), (yyvsp[0].str) ? (yyvsp[0].str) : ""); // Concatenar H + S + resto
+        (yyval.str) = strdup(compuesto);
+        free((yyvsp[-1].str));
+        if ((yyvsp[0].str)) free((yyvsp[0].str));
+    }
+#line 1435 "proyecto.tab.c"
+    break;
+
+  case 10: /* secuencia_elementos: ELEMENTO  */
+#line 107 "proyecto.y"
                {
-        printf("Elemento: %s\n", (yyvsp[0].str));
-        (yyval.str) = strdup((yyvsp[0].str)); // Retornar el elemento como string
+        (yyval.str) = strdup((yyvsp[0].str)); // Ejemplo: H o S solos
+        free((yyvsp[0].str));
     }
-#line 1405 "proyecto.tab.c"
+#line 1444 "proyecto.tab.c"
     break;
 
 
-#line 1409 "proyecto.tab.c"
+#line 1448 "proyecto.tab.c"
 
       default: break;
     }
@@ -1629,66 +1668,66 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 88 "proyecto.y"
+#line 122 "proyecto.y"
 
 
 char* get_componente(char* simbolo) {
-    if (strcmp(simbolo, "H") == 0) return("Hidrógeno ");
-    else if (strcmp(simbolo, "He") == 0) return("Helio ");
-    else if (strcmp(simbolo, "Li") == 0) return("Litio ");
-    else if (strcmp(simbolo, "Be") == 0) return("Berilio ");
-    else if (strcmp(simbolo, "B") == 0) return("Boro ");
-    else if (strcmp(simbolo, "C") == 0) return("Carbono ");
-    else if (strcmp(simbolo, "N") == 0) return("Nitrógeno ");
-    else if (strcmp(simbolo, "O") == 0) return("Oxígeno ");
-    else if (strcmp(simbolo, "F") == 0) return("Flúor ");
-    else if (strcmp(simbolo, "Ne") == 0) return("Neón ");
-    else if (strcmp(simbolo, "Na") == 0) return("Sodio ");
-    else if (strcmp(simbolo, "Mg") == 0) return("Magnesio ");
-    else if (strcmp(simbolo, "Al") == 0) return("Aluminio ");
-    else if (strcmp(simbolo, "Si") == 0) return("Silicio ");
-    else if (strcmp(simbolo, "P") == 0) return("Fósforo ");
-    else if (strcmp(simbolo, "S") == 0) return("Azufre ");
-    else if (strcmp(simbolo, "Cl") == 0) return("Cloro ");
-    else if (strcmp(simbolo, "Ar") == 0) return("Argón ");
-    else if (strcmp(simbolo, "K") == 0) return("Potasio ");
-    else if (strcmp(simbolo, "Ca") == 0) return("Calcio ");
-    else if (strcmp(simbolo, "Sc") == 0) return("Escandio ");
-    else if (strcmp(simbolo, "Ti") == 0) return("Titanio ");
-    else if (strcmp(simbolo, "V") == 0) return("Vanadio ");
-    else if (strcmp(simbolo, "Cr") == 0) return("Cromo ");
-    else if (strcmp(simbolo, "Mn") == 0) return("Manganeso ");
-    else if (strcmp(simbolo, "Fe") == 0) return("Hierro ");
-    else if (strcmp(simbolo, "Co") == 0) return("Cobalto ");
-    else if (strcmp(simbolo, "Ni") == 0) return("Níquel ");
-    else if (strcmp(simbolo, "Cu") == 0) return("Cobre ");
-    else if (strcmp(simbolo, "Zn") == 0) return("Zinc ");
-    else if (strcmp(simbolo, "Ga") == 0) return("Galio ");
-    else if (strcmp(simbolo, "Ge") == 0) return("Germanio ");
-    else if (strcmp(simbolo, "As") == 0) return("Arsénico ");
-    else if (strcmp(simbolo, "Se") == 0) return("Selenio ");
-    else if (strcmp(simbolo, "Br") == 0) return("Bromo ");
-    else if (strcmp(simbolo, "Kr") == 0) return("Kriptón ");
-    else if (strcmp(simbolo, "Rb") == 0) return("Rubidio ");
-    else if (strcmp(simbolo, "Sr") == 0) return("Estroncio ");
-    else if (strcmp(simbolo, "Y") == 0) return("Itrio ");
-    else if (strcmp(simbolo, "Zr") == 0) return("Circonio ");
-    else if (strcmp(simbolo, "Mo") == 0) return("Molibdeno ");
-    else if (strcmp(simbolo, "Pd") == 0) return("Paladio ");
-    else if (strcmp(simbolo, "Ag") == 0) return("Plata ");
-    else if (strcmp(simbolo, "Cd") == 0) return("Cadmio ");
-    else if (strcmp(simbolo, "Sn") == 0) return("Estaño ");
-    else if (strcmp(simbolo, "I") == 0) return("Yodo ");
-    else if (strcmp(simbolo, "Xe") == 0) return("Xenón ");
-    else if (strcmp(simbolo, "Cs") == 0) return("Cesio ");
-    else if (strcmp(simbolo, "Ba") == 0) return("Bario ");
-    else if (strcmp(simbolo, "Pt") == 0) return("Platino ");
+    if (strcmp(simbolo, "H") == 0) return("Hidrógeno");
+    else if (strcmp(simbolo, "He") == 0) return("Helio");
+    else if (strcmp(simbolo, "Li") == 0) return("Litio");
+    else if (strcmp(simbolo, "Be") == 0) return("Berilio");
+    else if (strcmp(simbolo, "B") == 0) return("Boro");
+    else if (strcmp(simbolo, "C") == 0) return("Carbono");
+    else if (strcmp(simbolo, "N") == 0) return("Nitrógeno");
+    else if (strcmp(simbolo, "O") == 0) return("Oxígeno");
+    else if (strcmp(simbolo, "F") == 0) return("Flúor");
+    else if (strcmp(simbolo, "Ne") == 0) return("Neón");
+    else if (strcmp(simbolo, "Na") == 0) return("Sodio");
+    else if (strcmp(simbolo, "Mg") == 0) return("Magnesio");
+    else if (strcmp(simbolo, "Al") == 0) return("Aluminio");
+    else if (strcmp(simbolo, "Si") == 0) return("Silicio");
+    else if (strcmp(simbolo, "P") == 0) return("Fósforo");
+    else if (strcmp(simbolo, "S") == 0) return("Azufre");
+    else if (strcmp(simbolo, "Cl") == 0) return("Cloro");
+    else if (strcmp(simbolo, "Ar") == 0) return("Argón");
+    else if (strcmp(simbolo, "K") == 0) return("Potasio");
+    else if (strcmp(simbolo, "Ca") == 0) return("Calcio");
+    else if (strcmp(simbolo, "Sc") == 0) return("Escandio");
+    else if (strcmp(simbolo, "Ti") == 0) return("Titanio");
+    else if (strcmp(simbolo, "V") == 0) return("Vanadio");
+    else if (strcmp(simbolo, "Cr") == 0) return("Cromo");
+    else if (strcmp(simbolo, "Mn") == 0) return("Manganeso");
+    else if (strcmp(simbolo, "Fe") == 0) return("Hierro");
+    else if (strcmp(simbolo, "Co") == 0) return("Cobalto");
+    else if (strcmp(simbolo, "Ni") == 0) return("Níquel");
+    else if (strcmp(simbolo, "Cu") == 0) return("Cobre");
+    else if (strcmp(simbolo, "Zn") == 0) return("Zinc");
+    else if (strcmp(simbolo, "Ga") == 0) return("Galio");
+    else if (strcmp(simbolo, "Ge") == 0) return("Germanio");
+    else if (strcmp(simbolo, "As") == 0) return("Arsénico");
+    else if (strcmp(simbolo, "Se") == 0) return("Selenio");
+    else if (strcmp(simbolo, "Br") == 0) return("Bromo");
+    else if (strcmp(simbolo, "Kr") == 0) return("Kriptón");
+    else if (strcmp(simbolo, "Rb") == 0) return("Rubidio");
+    else if (strcmp(simbolo, "Sr") == 0) return("Estroncio");
+    else if (strcmp(simbolo, "Y") == 0) return("Itrio");
+    else if (strcmp(simbolo, "Zr") == 0) return("Circonio");
+    else if (strcmp(simbolo, "Mo") == 0) return("Molibdeno");
+    else if (strcmp(simbolo, "Pd") == 0) return("Paladio");
+    else if (strcmp(simbolo, "Ag") == 0) return("Plata");
+    else if (strcmp(simbolo, "Cd") == 0) return("Cadmio");
+    else if (strcmp(simbolo, "Sn") == 0) return("Estaño");
+    else if (strcmp(simbolo, "I") == 0) return("Yodo");
+    else if (strcmp(simbolo, "Xe") == 0) return("Xenón");
+    else if (strcmp(simbolo, "Cs") == 0) return("Cesio");
+    else if (strcmp(simbolo, "Ba") == 0) return("Bario");
+    else if (strcmp(simbolo, "Pt") == 0) return("Platino");
     else return("%s ", simbolo);
 
 }
 
 char* nombre_trivial(const char* compuesto) {
-    printf("Buscando nombre trivial para: %s\n", compuesto);
+    printf("Fórmula:  %s\n", compuesto);
     if (strcmp(compuesto, "H2O") == 0) return "Agua";
     if (strcmp(compuesto, "CO2") == 0) return "Dióxido de carbono";
     if (strcmp(compuesto, "NH3") == 0) return "Amoníaco";
@@ -1696,9 +1735,187 @@ char* nombre_trivial(const char* compuesto) {
     if (strcmp(compuesto, "C2H6") == 0) return "Etano";
     if (strcmp(compuesto, "C3H8") == 0) return "Propano";
     if (strcmp(compuesto, "C4H10") == 0) return "Butano";
+    if (strcmp(compuesto, "PH3") == 0) return "Fosfina";
+    if (strcmp(compuesto, "SiH4") == 0) return "Silano";
     return NULL; // Si no hay un nombre común, devuelve NULL
 }
 
+char* hidruro_metalico(const char* compuesto) {
+    printf("Fórmula: %s\n", compuesto); 
+    int len = strlen(compuesto);
+    if (len < 2) return NULL;
+
+    // Verificar si la cadena termina en "H" o "H" seguido de un número (subíndice)
+    if (compuesto[len - 1] == 'H' || (isdigit(compuesto[len - 1]) && compuesto[len - 2] == 'H')) {
+        char simbolo_metal[10] = {0};
+        int i = len - 1;
+
+        // Retroceder para ignorar el "H" y cualquier subíndice (números)
+        while (i >= 0 && (isdigit(compuesto[i]) || compuesto[i] == 'H')) {
+            i--;
+        }
+
+        // Retroceder hasta el inicio del símbolo metálico (última letra mayúscula + opcionalmente una minúscula)
+        int start = i;
+        if (start > 0 && islower(compuesto[start])) {
+            start--; // Incluye la letra minúscula si existe
+        }
+        while (start > 0 && isupper(compuesto[start - 1])) {
+            start--; // Retrocede a la última mayúscula
+        }
+
+        // Copiar el símbolo del metal
+        strncpy(simbolo_metal, &compuesto[start], i - start + 1);
+        simbolo_metal[i - start + 1] = '\0';
+
+    
+
+        // Buscar el nombre del metal
+        char* metal = get_componente(simbolo_metal);
+        if (metal) {
+            char* resultado = (char*)malloc(100);
+            sprintf(resultado, "Hidruro de %s", metal);
+            return resultado;
+        } else {
+            printf("Error: No se encontró el nombre para el símbolo '%s'\n", simbolo_metal);
+        }
+    }
+    return NULL;
+}
+
+char* es_acido(const char* compuesto) {
+    if (compuesto[0] == 'H') { // Si comienza con H (hidrógeno)
+        int i = 1; // Posición inicial después de H
+
+        // Ignorar subíndices después de la H (por ejemplo, "2" en H2S)
+        while (isdigit(compuesto[i])) i++;
+
+        char simbolo_no_metal[10] = {0};
+
+        // Extraer el símbolo del no metal (1 o 2 letras después de los números)
+        if (islower(compuesto[i + 1])) {
+            strncpy(simbolo_no_metal, &compuesto[i], 2); // Símbolo de 2 letras
+            simbolo_no_metal[2] = '\0';
+        } else {
+            strncpy(simbolo_no_metal, &compuesto[i], 1); // Símbolo de 1 letra
+            simbolo_no_metal[1] = '\0';
+        }
+
+        // Construir el nombre del ácido
+        char* resultado = (char*)malloc(100);
+        sprintf(resultado, "Ácido %shídrico",
+            (strcmp(simbolo_no_metal, "F") == 0) ? "fluor" :
+            (strcmp(simbolo_no_metal, "Cl") == 0) ? "clor" :
+            (strcmp(simbolo_no_metal, "Br") == 0) ? "brom" :
+            (strcmp(simbolo_no_metal, "I") == 0) ? "yod" :
+            (strcmp(simbolo_no_metal, "S") == 0) ? "sulf" :
+            (strcmp(simbolo_no_metal, "Se") == 0) ? "selen" :
+            (strcmp(simbolo_no_metal, "Te") == 0) ? "telur" :
+            "desconocido");
+
+        // Si no coincide con un no metal conocido, liberar y retornar NULL
+        if (strcmp(resultado, "Ácido desconocidohídrico") == 0) {
+            free(resultado);
+            return NULL;
+        }
+
+        return resultado;
+    }
+    return NULL; // No comienza con H, no es un ácido
+}
+
+char* es_oxido(const char* compuesto) {
+    printf("Verificando si es un óxido: %s\n", compuesto); // Depuración
+
+    int len = strlen(compuesto);
+    char simbolo_elemento[10] = {0};
+    int subindice_oxigeno = 1; // Subíndice por defecto para "O"
+
+    // Buscar el símbolo del elemento principal (antes de "O")
+    int i = 0, j = 0;
+    while (i < len && compuesto[i] != 'O') {
+        if (isupper(compuesto[i])) {
+            if (j > 0) break; // Si ya hay otro símbolo, detener
+            simbolo_elemento[j++] = compuesto[i];
+        } else if (islower(compuesto[i])) {
+            simbolo_elemento[j++] = compuesto[i];
+        }
+        i++;
+    }
+    simbolo_elemento[j] = '\0'; // Terminar la cadena del símbolo del elemento
+
+    // Verificar si contiene "O" y leer su subíndice
+    if (i < len && compuesto[i] == 'O') {
+        i++;
+        if (isdigit(compuesto[i])) {
+            subindice_oxigeno = compuesto[i] - '0'; // Extraer el subíndice del oxígeno
+        }
+    } else {
+        return NULL; // No es un óxido válido
+    }
+
+    // Obtener el nombre del elemento principal
+    char* nombre_elemento = get_componente(simbolo_elemento);
+    if (!nombre_elemento) {
+        printf("No se reconoce el elemento: %s\n", simbolo_elemento);
+        return NULL;
+    }
+
+    // Construir el nombre del óxido con el prefijo
+    char* resultado = (char*)malloc(100);
+    if (subindice_oxigeno == 1) {
+        sprintf(resultado, "Óxido de %s", nombre_elemento);
+    } else {
+        sprintf(resultado, "%sóxido de %s", prefijo(subindice_oxigeno), nombre_elemento);
+    }
+    return resultado;
+}
+
+char* generar_binario(const char* compuesto) {
+    char simbolo_izquierda[10] = {0}, simbolo_derecha[10] = {0};
+    int i = 0, j = 0;
+
+    // Extraer el primer símbolo (izquierda del compuesto)
+    while (compuesto[i] && isalpha(compuesto[i])) {
+        simbolo_izquierda[j++] = compuesto[i++];
+        if (isupper(compuesto[i])) break; // Nueva mayúscula indica segundo símbolo
+    }
+    simbolo_izquierda[j] = '\0';
+
+    // Saltar números si existen
+    while (isdigit(compuesto[i])) i++;
+
+    // Extraer el segundo símbolo (derecha del compuesto)
+    j = 0;
+    while (compuesto[i] && isalpha(compuesto[i])) {
+        simbolo_derecha[j++] = compuesto[i++];
+    }
+    simbolo_derecha[j] = '\0';
+
+    // Validar símbolos extraídos
+    if (strlen(simbolo_derecha) == 0 || strlen(simbolo_izquierda) == 0) {
+        return strdup(compuesto); // Devuelve el compuesto original si no hay símbolos válidos
+    }
+
+    // Obtener los nombres completos usando get_componente
+    const char* nombre_izquierda = get_componente(simbolo_izquierda);
+    const char* nombre_derecha = get_componente(simbolo_derecha);
+
+    // Si no encuentra el nombre de algún componente, devuelve el compuesto original
+    if (!nombre_izquierda || !nombre_derecha) {
+        return strdup(compuesto);
+    }
+
+    // Añadir el sufijo "–uro" al nombre del símbolo derecho
+    char nombre_derecha_uro[50];
+    sprintf(nombre_derecha_uro, "%suro", nombre_derecha);
+
+    // Construir el nombre final
+    char* resultado = (char*)malloc(100);
+    sprintf(resultado, "%s de %s", nombre_derecha_uro, nombre_izquierda);
+
+    return resultado;
+}
 
 
 
@@ -1759,6 +1976,15 @@ void yyerror(const char *s) {
 }
 
 int main() {
-    yyparse();
+    
+    int formulas_procesadas = 0;
+    while (!feof(stdin)) { // Leer entrada hasta el final del archivo
+        yyparse();
+        formulas_procesadas++;
+    }
+    printf("%d fórmulas procesadas.\n", formulas_procesadas);
+    printf("Fin del análisis.\n");
     return 0;
+
+
 }
