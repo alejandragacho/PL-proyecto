@@ -5,17 +5,18 @@
 
 void yyerror(const char *s);
 extern int yylex();
-
-
 extern int yylineno;
 
 /* Declaración de funciones auxiliares */
 char* describe(char* elemento, int numero);
 char* concat(const char* str1, const char* str2, const char* str3);
 char* prefijo(int numero);
+char* nombre_trivial(const char* compuesto);
 
 %}
-%error-verbose
+
+%define parse.error verbose
+
 %union {
     char* str;
     int num;
@@ -23,7 +24,7 @@ char* prefijo(int numero);
 %token <str> ELEMENTO
 %token <num> SUBINDICE
 %token SALTO
-%type <str> compuesto
+%type <str> secuencia_elementos compuesto
 %start S
 %%
 
@@ -33,24 +34,56 @@ S:
 
 fichero:
     formula
-    | formula SALTO fichero 
+    | formula SALTO fichero
 ;
 
 formula:
-    compuesto
-    | compuesto formula
+    compuesto {
+        printf("Procesando fórmula: %s\n", $1);
+        free($1); // Liberar memoria asignada dinámicamente
+    }
 ;
 
 compuesto:
-    ELEMENTO SUBINDICE ELEMENTO { 
-        char* descripcion = concat(describe($1, $2), "de ", describe($3, 1));
-        printf("%s\n", descripcion); 
-        free(descripcion); 
+    secuencia_elementos {
+        $$ = $1; // La salida del compuesto es igual a secuencia_elementos
     }
-    |
-    ELEMENTO SUBINDICE { printf("%s \n", describe($1, $2)); }
-    | ELEMENTO {  printf("%s \n", describe($1, 1)); }
 ;
+
+secuencia_elementos:
+    ELEMENTO SUBINDICE secuencia_elementos {
+        printf("Elemento: %s, Subíndice: %d, Resto: %s\n", $1, $2, $3 ? $3 : "NULL");
+        char compuesto[200];
+        sprintf(compuesto, "%s%d%s", $1, $2, $3 ? $3 : ""); // Construir la fórmula completa
+        char* nombre_comun = nombre_trivial(compuesto);
+        if (nombre_comun) {
+            $$ = strdup(nombre_comun); // Usar el nombre trivial si existe
+        } else {
+            $$ = strdup(compuesto); // Retornar el compuesto construido si no hay nombre trivial
+        }
+    }
+    | ELEMENTO SUBINDICE {
+        printf("Elemento: %s, Subíndice: %d\n", $1, $2);
+        char compuesto[50];
+        sprintf(compuesto, "%s%d", $1, $2); // Construir la fórmula parcial
+        char* nombre_comun = nombre_trivial(compuesto);
+        if (nombre_comun) {
+            $$ = strdup(nombre_comun);
+        } else {
+            $$ = strdup(compuesto);
+        }
+    }
+    | ELEMENTO {
+        printf("Elemento: %s\n", $1);
+        $$ = strdup($1); // Retornar el elemento como string
+    }
+;
+
+
+
+
+
+
 
 %%
 
@@ -109,8 +142,34 @@ char* get_componente(char* simbolo) {
 
 }
 
-/* Función auxiliar para describir un elemento con su subíndice */
+char* nombre_trivial(const char* compuesto) {
+    printf("Buscando nombre trivial para: %s\n", compuesto);
+    if (strcmp(compuesto, "H2O") == 0) return "Agua";
+    if (strcmp(compuesto, "CO2") == 0) return "Dióxido de carbono";
+    if (strcmp(compuesto, "NH3") == 0) return "Amoníaco";
+    if (strcmp(compuesto, "CH4") == 0) return "Metano";
+    if (strcmp(compuesto, "C2H6") == 0) return "Etano";
+    if (strcmp(compuesto, "C3H8") == 0) return "Propano";
+    if (strcmp(compuesto, "C4H10") == 0) return "Butano";
+    return NULL; // Si no hay un nombre común, devuelve NULL
+}
+
+
+
+
 char* describe(char* componente, int numero) {
+    char compuesto[50];
+    if (numero > 1) {
+        sprintf(compuesto, "%s%d", componente, numero); // Ejemplo: H2
+    } else {
+        strcpy(compuesto, componente); // Ejemplo: H
+    }
+
+    char* nombre_comun = nombre_trivial(compuesto);
+    if (nombre_comun) {
+        return strdup(nombre_comun); // Devuelve el nombre trivial si existe
+    }
+
     char* resultado = (char*)malloc(200);
     char* elemento = get_componente(componente);
     const char* pref = prefijo(numero);
@@ -121,6 +180,8 @@ char* describe(char* componente, int numero) {
     }
     return resultado;
 }
+
+
 
 /* Función para generar prefijos numéricos en texto */
 char* prefijo(int numero) {

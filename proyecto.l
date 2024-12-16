@@ -19,7 +19,8 @@ ESPACIO     [ \t]+
 
 {ESPACIO}     { /* Ignorar */ }
 
-.           { printf("Elemento no reconocido: %s \n", yytext); }
+.           {        { fprintf(stderr, "Error léxico: %s en la línea %d\n", yytext, yylineno); } }
+ 
 
 %%
 

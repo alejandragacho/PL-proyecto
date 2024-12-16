@@ -811,11 +811,11 @@ YY_RULE_SETUP
 case 5:
 YY_RULE_SETUP
 #line 22 "proyecto.l"
-{ printf("Elemento no reconocido: %s \n", yytext); }
+{        { fprintf(stderr, "Error léxico: %s en la línea %d\n", yytext, yylineno); } }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 24 "proyecto.l"
+#line 25 "proyecto.l"
 ECHO;
 	YY_BREAK
 #line 822 "lex.yy.c"
@@ -1835,7 +1835,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 24 "proyecto.l"
+#line 25 "proyecto.l"
 
 
 int yywrap() { return 1; }
