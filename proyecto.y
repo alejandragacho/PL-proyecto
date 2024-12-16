@@ -9,6 +9,7 @@ extern int yylex();
 extern int yylineno;
 
 /* Declaración de funciones auxiliares */
+char* get_componente(char* compuesto);
 char* describe(char* elemento, int numero);
 char* concat(const char* str1, const char* str2, const char* str3);
 char* prefijo(int numero);
@@ -51,7 +52,8 @@ formula:
 ;
 
 compuesto:
-    secuencia_elementos {
+    ELEMENTO{ printf( "%s\n", get_componente($1)); }
+    |secuencia_elementos{
         printf("Compuesto recibido: %s\n", $1);
 
         // 1. Verificar si el compuesto tiene un nombre trivial
@@ -109,15 +111,6 @@ secuencia_elementos:
         free($1);
     }
 ;
-
-
-
-
-
-
-
-
-
 
 %%
 
@@ -187,6 +180,27 @@ char* nombre_trivial(const char* compuesto) {
     if (strcmp(compuesto, "C4H10") == 0) return "Butano";
     if (strcmp(compuesto, "PH3") == 0) return "Fosfina";
     if (strcmp(compuesto, "SiH4") == 0) return "Silano";
+    if (strcmp(compuesto, "CO") == 0) return "Monóxido de carbono";
+    if (strcmp(compuesto, "NaCl") == 0) return "Cloruro de sodio (sal de mesa)";
+    if (strcmp(compuesto, "HCl") == 0) return "Ácido clorhídrico";
+    if (strcmp(compuesto, "H2SO4") == 0) return "Ácido sulfúrico";
+    if (strcmp(compuesto, "HNO3") == 0) return "Ácido nítrico";
+    if (strcmp(compuesto, "H3PO4") == 0) return "Ácido fosfórico";
+    if (strcmp(compuesto, "H2CO2") == 0) return "Ácido carbónico";
+    if (strcmp(compuesto, "HF") == 0) return "Ácido fluorhídrico";
+    if (strcmp(compuesto, "HBr") == 0) return "Ácido bromhídrico";
+    if (strcmp(compuesto, "HI") == 0) return "Ácido yodhídrico";
+    if (strcmp(compuesto, "HCN") == 0) return "Ácido cianhídrico";
+    if (strcmp(compuesto, "H2S") == 0) return "Ácido sulfhídrico";
+    if (strcmp(compuesto, "H2O2") == 0) return "Peróxido de hidrógeno";
+    if (strcmp(compuesto, "O3") == 0) return "Ozono";
+    if (strcmp(compuesto, "NaHCO3") == 0) return "Bicarbonato de sodio";
+    if (strcmp(compuesto, "NaOH") == 0) return "Hidróxido de sodio";
+    if (strcmp(compuesto, "KOH") == 0) return "Hidróxido de potasio";
+    if (strcmp(compuesto, "N2O") == 0) return "Óxido nitroso";
+    if (strcmp(compuesto, "C6H12O6") == 0) return "Glucosa";
+    if (strcmp(compuesto, "C2H6O") == 0) return "Etanol";
+    if (strcmp(compuesto, "C6H6") == 0) return "Benceno";
     return NULL; // Si no hay un nombre común, devuelve NULL
 }
 

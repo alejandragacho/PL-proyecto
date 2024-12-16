@@ -79,6 +79,7 @@ extern int yylex();
 extern int yylineno;
 
 /* Declaración de funciones auxiliares */
+char* get_componente(char* compuesto);
 char* describe(char* elemento, int numero);
 char* concat(const char* str1, const char* str2, const char* str3);
 char* prefijo(int numero);
@@ -89,7 +90,7 @@ char* es_oxido(const char* compuesto);
 char* generar_binario(const char* compuesto);
 
 
-#line 93 "proyecto.tab.c"
+#line 94 "proyecto.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -456,18 +457,18 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  9
+#define YYFINAL  10
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   7
+#define YYLAST   12
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  8
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  10
+#define YYNRULES  11
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  13
+#define YYNSTATES  14
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   262
@@ -517,8 +518,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    38,    38,    42,    43,    47,    54,    87,    94,   100,
-     107
+       0,    39,    39,    43,    44,    48,    55,    56,    89,    96,
+     102,   109
 };
 #endif
 
@@ -546,7 +547,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-6)
+#define YYPACT_NINF (-3)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -560,8 +561,8 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       0,    -2,     4,    -6,     2,    -6,    -6,     0,    -6,    -6,
-       0,    -6,    -6
+       0,    -2,     4,    -3,     3,    -3,    -3,    -2,     2,    -3,
+      -3,     0,    -3,    -3
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -569,14 +570,14 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,    10,     0,     2,     3,     5,     6,     8,     9,     1,
-       0,     7,     4
+       0,     6,     0,     2,     3,     5,     7,    11,     9,    10,
+       1,     0,     8,     4
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -6,    -6,    -5,    -6,    -6,    -1
+      -3,    -3,     1,    -3,    -3,    -1
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -590,34 +591,36 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       8,     1,     7,     1,     9,    12,    11,    10
+       9,     7,     8,     1,    10,     7,     9,    12,    11,     0,
+       0,     0,    13
 };
 
 static const yytype_int8 yycheck[] =
 {
-       1,     3,     4,     3,     0,    10,     7,     5
+       1,     3,     4,     3,     0,     3,     7,     8,     5,    -1,
+      -1,    -1,    11
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     9,    10,    11,    12,    13,     4,    13,     0,
-       5,    13,    10
+       0,     3,     9,    10,    11,    12,    13,     3,     4,    13,
+       0,     5,    13,    10
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,     8,     9,    10,    10,    11,    12,    13,    13,    13,
-      13
+       0,     8,     9,    10,    10,    11,    12,    12,    13,    13,
+      13,    13
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     1,     3,     1,     1,     3,     2,     2,
-       1
+       0,     2,     1,     1,     3,     1,     1,     1,     3,     2,
+       2,     1
 };
 
 
@@ -1351,22 +1354,28 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* S: fichero  */
-#line 38 "proyecto.y"
+#line 39 "proyecto.y"
             { printf("Fin \n"); return 0;}
-#line 1357 "proyecto.tab.c"
+#line 1360 "proyecto.tab.c"
     break;
 
   case 5: /* formula: compuesto  */
-#line 47 "proyecto.y"
+#line 48 "proyecto.y"
               {
         printf("Resultado: %s\n\n", (yyvsp[0].str));
         free((yyvsp[0].str)); // Liberar memoria asignada dinámicamente
     }
-#line 1366 "proyecto.tab.c"
+#line 1369 "proyecto.tab.c"
     break;
 
-  case 6: /* compuesto: secuencia_elementos  */
-#line 54 "proyecto.y"
+  case 6: /* compuesto: ELEMENTO  */
+#line 55 "proyecto.y"
+            { printf( "%s", get_componente((yyvsp[0].str))); }
+#line 1375 "proyecto.tab.c"
+    break;
+
+  case 7: /* compuesto: secuencia_elementos  */
+#line 56 "proyecto.y"
                         {
         printf("Compuesto recibido: %s\n", (yyvsp[0].str));
 
@@ -1396,11 +1405,11 @@ yyreduce:
         }
         free((yyvsp[0].str));
     }
-#line 1400 "proyecto.tab.c"
+#line 1409 "proyecto.tab.c"
     break;
 
-  case 7: /* secuencia_elementos: ELEMENTO SUBINDICE secuencia_elementos  */
-#line 87 "proyecto.y"
+  case 8: /* secuencia_elementos: ELEMENTO SUBINDICE secuencia_elementos  */
+#line 89 "proyecto.y"
                                            {
         char compuesto[200];
         sprintf(compuesto, "%s%d%s", (yyvsp[-2].str), (yyvsp[-1].num), (yyvsp[0].str) ? (yyvsp[0].str) : ""); // Concatenar H2 + S + resto
@@ -1408,22 +1417,22 @@ yyreduce:
         free((yyvsp[-2].str));
         if ((yyvsp[0].str)) free((yyvsp[0].str));
     }
-#line 1412 "proyecto.tab.c"
+#line 1421 "proyecto.tab.c"
     break;
 
-  case 8: /* secuencia_elementos: ELEMENTO SUBINDICE  */
-#line 94 "proyecto.y"
+  case 9: /* secuencia_elementos: ELEMENTO SUBINDICE  */
+#line 96 "proyecto.y"
                          {
         char compuesto[50];
         sprintf(compuesto, "%s%d", (yyvsp[-1].str), (yyvsp[0].num)); // Ejemplo: H2
         (yyval.str) = strdup(compuesto);
         free((yyvsp[-1].str));
     }
-#line 1423 "proyecto.tab.c"
+#line 1432 "proyecto.tab.c"
     break;
 
-  case 9: /* secuencia_elementos: ELEMENTO secuencia_elementos  */
-#line 100 "proyecto.y"
+  case 10: /* secuencia_elementos: ELEMENTO secuencia_elementos  */
+#line 102 "proyecto.y"
                                    {
         char compuesto[200];
         sprintf(compuesto, "%s%s", (yyvsp[-1].str), (yyvsp[0].str) ? (yyvsp[0].str) : ""); // Concatenar H + S + resto
@@ -1431,20 +1440,20 @@ yyreduce:
         free((yyvsp[-1].str));
         if ((yyvsp[0].str)) free((yyvsp[0].str));
     }
-#line 1435 "proyecto.tab.c"
+#line 1444 "proyecto.tab.c"
     break;
 
-  case 10: /* secuencia_elementos: ELEMENTO  */
-#line 107 "proyecto.y"
+  case 11: /* secuencia_elementos: ELEMENTO  */
+#line 109 "proyecto.y"
                {
         (yyval.str) = strdup((yyvsp[0].str)); // Ejemplo: H o S solos
         free((yyvsp[0].str));
     }
-#line 1444 "proyecto.tab.c"
+#line 1453 "proyecto.tab.c"
     break;
 
 
-#line 1448 "proyecto.tab.c"
+#line 1457 "proyecto.tab.c"
 
       default: break;
     }
@@ -1668,7 +1677,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 122 "proyecto.y"
+#line 115 "proyecto.y"
 
 
 char* get_componente(char* simbolo) {
@@ -1737,6 +1746,27 @@ char* nombre_trivial(const char* compuesto) {
     if (strcmp(compuesto, "C4H10") == 0) return "Butano";
     if (strcmp(compuesto, "PH3") == 0) return "Fosfina";
     if (strcmp(compuesto, "SiH4") == 0) return "Silano";
+    if (strcmp(compuesto, "CO") == 0) return "Monóxido de carbono";
+    if (strcmp(compuesto, "NaCl") == 0) return "Cloruro de sodio (sal de mesa)";
+    if (strcmp(compuesto, "HCl") == 0) return "Ácido clorhídrico";
+    if (strcmp(compuesto, "H2SO4") == 0) return "Ácido sulfúrico";
+    if (strcmp(compuesto, "HNO3") == 0) return "Ácido nítrico";
+    if (strcmp(compuesto, "H3PO4") == 0) return "Ácido fosfórico";
+    if (strcmp(compuesto, "H2CO2") == 0) return "Ácido carbónico";
+    if (strcmp(compuesto, "HF") == 0) return "Ácido fluorhídrico";
+    if (strcmp(compuesto, "HBr") == 0) return "Ácido bromhídrico";
+    if (strcmp(compuesto, "HI") == 0) return "Ácido yodhídrico";
+    if (strcmp(compuesto, "HCN") == 0) return "Ácido cianhídrico";
+    if (strcmp(compuesto, "H2S") == 0) return "Ácido sulfhídrico";
+    if (strcmp(compuesto, "H2O2") == 0) return "Peróxido de hidrógeno";
+    if (strcmp(compuesto, "O3") == 0) return "Ozono";
+    if (strcmp(compuesto, "NaHCO3") == 0) return "Bicarbonato de sodio";
+    if (strcmp(compuesto, "NaOH") == 0) return "Hidróxido de sodio";
+    if (strcmp(compuesto, "KOH") == 0) return "Hidróxido de potasio";
+    if (strcmp(compuesto, "N2O") == 0) return "Óxido nitroso";
+    if (strcmp(compuesto, "C6H12O6") == 0) return "Glucosa";
+    if (strcmp(compuesto, "C2H6O") == 0) return "Etanol";
+    if (strcmp(compuesto, "C6H6") == 0) return "Benceno";
     return NULL; // Si no hay un nombre común, devuelve NULL
 }
 

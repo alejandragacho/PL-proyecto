@@ -1,1 +1,7 @@
 CuF
+H2O
+C6H6
+NaCl
+KOH
+O
+He
