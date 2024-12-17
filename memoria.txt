@@ -5,3 +5,7 @@ NaCl
 KOH
 O
 He
+ClO
+O2
+H2
+Na3

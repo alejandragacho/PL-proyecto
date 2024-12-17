@@ -36,7 +36,7 @@ char* generar_binario(const char* compuesto);
 %%
 
 S:
-    fichero { printf("Fin \n"); return 0;}
+    fichero { printf("Fin del fichero.\n"); return 0;}
 ;
 
 fichero:
@@ -53,6 +53,7 @@ formula:
 
 compuesto:
     ELEMENTO{ printf( "%s\n", get_componente($1)); }
+    | ELEMENTO SUBINDICE { printf("%s%s\n", prefijo($2), get_componente($1));}
     |secuencia_elementos{
         printf("Compuesto recibido: %s\n", $1);
 
@@ -441,12 +442,8 @@ void yyerror(const char *s) {
 
 int main() {
     
-    int formulas_procesadas = 0;
-    while (!feof(stdin)) { // Leer entrada hasta el final del archivo
-        yyparse();
-        formulas_procesadas++;
-    }
-    printf("%d fórmulas procesadas.\n", formulas_procesadas);
+    yyparse();
+    printf("Todas las fórmulas han sido procesadas.\n");
     printf("Fin del análisis.\n");
     return 0;
 

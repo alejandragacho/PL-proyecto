@@ -466,9 +466,9 @@ union yyalloc
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  11
+#define YYNRULES  12
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  14
+#define YYNSTATES  15
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   262
@@ -518,8 +518,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    39,    39,    43,    44,    48,    55,    56,    89,    96,
-     102,   109
+       0,    39,    39,    43,    44,    48,    55,    56,    57,    90,
+      97,   103,   110
 };
 #endif
 
@@ -561,8 +561,8 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-       0,    -2,     4,    -3,     3,    -3,    -3,    -2,     2,    -3,
-      -3,     0,    -3,    -3
+       2,    -2,     8,    -3,     4,    -3,    -3,     0,     7,    -3,
+      -3,     2,     7,    -3,    -3
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -570,8 +570,8 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     6,     0,     2,     3,     5,     7,    11,     9,    10,
-       1,     0,     8,     4
+       0,     6,     0,     2,     3,     5,     8,    12,     7,    11,
+       1,     0,    10,     9,     4
 };
 
 /* YYPGOTO[NTERM-NUM].  */
@@ -591,14 +591,14 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       9,     7,     8,     1,    10,     7,     9,    12,    11,     0,
-       0,     0,    13
+       9,     7,     8,     7,    12,     1,     9,    13,    10,    11,
+       7,    13,    14
 };
 
 static const yytype_int8 yycheck[] =
 {
-       1,     3,     4,     3,     0,     3,     7,     8,     5,    -1,
-      -1,    -1,    11
+       1,     3,     4,     3,     4,     3,     7,     8,     0,     5,
+       3,    12,    11
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -606,21 +606,21 @@ static const yytype_int8 yycheck[] =
 static const yytype_int8 yystos[] =
 {
        0,     3,     9,    10,    11,    12,    13,     3,     4,    13,
-       0,     5,    13,    10
+       0,     5,     4,    13,    10
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,     8,     9,    10,    10,    11,    12,    12,    13,    13,
-      13,    13
+       0,     8,     9,    10,    10,    11,    12,    12,    12,    13,
+      13,    13,    13
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     1,     3,     1,     1,     1,     3,     2,
-       2,     1
+       0,     2,     1,     1,     3,     1,     1,     2,     1,     3,
+       2,     2,     1
 };
 
 
@@ -1355,7 +1355,7 @@ yyreduce:
     {
   case 2: /* S: fichero  */
 #line 39 "proyecto.y"
-            { printf("Fin \n"); return 0;}
+            { printf("Fin del fichero.\n"); return 0;}
 #line 1360 "proyecto.tab.c"
     break;
 
@@ -1370,12 +1370,18 @@ yyreduce:
 
   case 6: /* compuesto: ELEMENTO  */
 #line 55 "proyecto.y"
-            { printf( "%s", get_componente((yyvsp[0].str))); }
+            { printf( "%s\n", get_componente((yyvsp[0].str))); }
 #line 1375 "proyecto.tab.c"
     break;
 
-  case 7: /* compuesto: secuencia_elementos  */
+  case 7: /* compuesto: ELEMENTO SUBINDICE  */
 #line 56 "proyecto.y"
+                         { printf("%s%s\n", prefijo((yyvsp[0].num)), get_componente((yyvsp[-1].str)));}
+#line 1381 "proyecto.tab.c"
+    break;
+
+  case 8: /* compuesto: secuencia_elementos  */
+#line 57 "proyecto.y"
                         {
         printf("Compuesto recibido: %s\n", (yyvsp[0].str));
 
@@ -1405,11 +1411,11 @@ yyreduce:
         }
         free((yyvsp[0].str));
     }
-#line 1409 "proyecto.tab.c"
+#line 1415 "proyecto.tab.c"
     break;
 
-  case 8: /* secuencia_elementos: ELEMENTO SUBINDICE secuencia_elementos  */
-#line 89 "proyecto.y"
+  case 9: /* secuencia_elementos: ELEMENTO SUBINDICE secuencia_elementos  */
+#line 90 "proyecto.y"
                                            {
         char compuesto[200];
         sprintf(compuesto, "%s%d%s", (yyvsp[-2].str), (yyvsp[-1].num), (yyvsp[0].str) ? (yyvsp[0].str) : ""); // Concatenar H2 + S + resto
@@ -1417,22 +1423,22 @@ yyreduce:
         free((yyvsp[-2].str));
         if ((yyvsp[0].str)) free((yyvsp[0].str));
     }
-#line 1421 "proyecto.tab.c"
+#line 1427 "proyecto.tab.c"
     break;
 
-  case 9: /* secuencia_elementos: ELEMENTO SUBINDICE  */
-#line 96 "proyecto.y"
+  case 10: /* secuencia_elementos: ELEMENTO SUBINDICE  */
+#line 97 "proyecto.y"
                          {
         char compuesto[50];
         sprintf(compuesto, "%s%d", (yyvsp[-1].str), (yyvsp[0].num)); // Ejemplo: H2
         (yyval.str) = strdup(compuesto);
         free((yyvsp[-1].str));
     }
-#line 1432 "proyecto.tab.c"
+#line 1438 "proyecto.tab.c"
     break;
 
-  case 10: /* secuencia_elementos: ELEMENTO secuencia_elementos  */
-#line 102 "proyecto.y"
+  case 11: /* secuencia_elementos: ELEMENTO secuencia_elementos  */
+#line 103 "proyecto.y"
                                    {
         char compuesto[200];
         sprintf(compuesto, "%s%s", (yyvsp[-1].str), (yyvsp[0].str) ? (yyvsp[0].str) : ""); // Concatenar H + S + resto
@@ -1440,20 +1446,20 @@ yyreduce:
         free((yyvsp[-1].str));
         if ((yyvsp[0].str)) free((yyvsp[0].str));
     }
-#line 1444 "proyecto.tab.c"
+#line 1450 "proyecto.tab.c"
     break;
 
-  case 11: /* secuencia_elementos: ELEMENTO  */
-#line 109 "proyecto.y"
+  case 12: /* secuencia_elementos: ELEMENTO  */
+#line 110 "proyecto.y"
                {
         (yyval.str) = strdup((yyvsp[0].str)); // Ejemplo: H o S solos
         free((yyvsp[0].str));
     }
-#line 1453 "proyecto.tab.c"
+#line 1459 "proyecto.tab.c"
     break;
 
 
-#line 1457 "proyecto.tab.c"
+#line 1463 "proyecto.tab.c"
 
       default: break;
     }
@@ -1677,7 +1683,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 115 "proyecto.y"
+#line 116 "proyecto.y"
 
 
 char* get_componente(char* simbolo) {
@@ -2007,12 +2013,8 @@ void yyerror(const char *s) {
 
 int main() {
     
-    int formulas_procesadas = 0;
-    while (!feof(stdin)) { // Leer entrada hasta el final del archivo
-        yyparse();
-        formulas_procesadas++;
-    }
-    printf("%d fórmulas procesadas.\n", formulas_procesadas);
+    yyparse();
+    printf("Todas las fórmulas han sido procesadas.\n");
     printf("Fin del análisis.\n");
     return 0;
 
