@@ -9,3 +9,8 @@ ClO
 O2
 H2
 Na3
+ClO2
+N2O
+CO
+CO2
+HCl

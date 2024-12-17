@@ -52,10 +52,18 @@ formula:
 ;
 
 compuesto:
-    ELEMENTO{ printf( "%s\n", get_componente($1)); }
-    | ELEMENTO SUBINDICE { printf("%s%s\n", prefijo($2), get_componente($1));}
+    ELEMENTO { 
+        printf("Fórmula: %s\n", $1); 
+        $$ = strdup(get_componente($1)); 
+    }
+    | ELEMENTO SUBINDICE { 
+        printf("Fórmula: %s%d\n", $1, $2); 
+        char* aux = concat(prefijo($2), get_componente($1), "");  
+        $$ = strdup(aux); 
+        free(aux);
+    }
     |secuencia_elementos{
-        printf("Compuesto recibido: %s\n", $1);
+        //printf("Compuesto recibido: %s\n", $1);
 
         // 1. Verificar si el compuesto tiene un nombre trivial
         char* nombre_comun = nombre_trivial($1);
@@ -87,6 +95,14 @@ compuesto:
 
 
 secuencia_elementos:
+    ELEMENTO secuencia_elementos {
+        char compuesto[200];
+        sprintf(compuesto, "%s%s", $1, $2 ? $2 : ""); // Concatenar H + S + resto
+        $$ = strdup(compuesto);
+        free($1);
+        if ($2) free($2);
+    }
+    |
     ELEMENTO SUBINDICE secuencia_elementos {
         char compuesto[200];
         sprintf(compuesto, "%s%d%s", $1, $2, $3 ? $3 : ""); // Concatenar H2 + S + resto
@@ -94,21 +110,14 @@ secuencia_elementos:
         free($1);
         if ($3) free($3);
     }
+    |  ELEMENTO {
+        $$ = strdup($1); // Ejemplo: H o S solos
+        free($1);
+    }
     | ELEMENTO SUBINDICE {
         char compuesto[50];
         sprintf(compuesto, "%s%d", $1, $2); // Ejemplo: H2
         $$ = strdup(compuesto);
-        free($1);
-    }
-    | ELEMENTO secuencia_elementos {
-        char compuesto[200];
-        sprintf(compuesto, "%s%s", $1, $2 ? $2 : ""); // Concatenar H + S + resto
-        $$ = strdup(compuesto);
-        free($1);
-        if ($2) free($2);
-    }
-    | ELEMENTO {
-        $$ = strdup($1); // Ejemplo: H o S solos
         free($1);
     }
 ;
@@ -173,7 +182,6 @@ char* get_componente(char* simbolo) {
 char* nombre_trivial(const char* compuesto) {
     printf("Fórmula:  %s\n", compuesto);
     if (strcmp(compuesto, "H2O") == 0) return "Agua";
-    if (strcmp(compuesto, "CO2") == 0) return "Dióxido de carbono";
     if (strcmp(compuesto, "NH3") == 0) return "Amoníaco";
     if (strcmp(compuesto, "CH4") == 0) return "Metano";
     if (strcmp(compuesto, "C2H6") == 0) return "Etano";
@@ -181,24 +189,12 @@ char* nombre_trivial(const char* compuesto) {
     if (strcmp(compuesto, "C4H10") == 0) return "Butano";
     if (strcmp(compuesto, "PH3") == 0) return "Fosfina";
     if (strcmp(compuesto, "SiH4") == 0) return "Silano";
-    if (strcmp(compuesto, "CO") == 0) return "Monóxido de carbono";
     if (strcmp(compuesto, "NaCl") == 0) return "Cloruro de sodio (sal de mesa)";
-    if (strcmp(compuesto, "HCl") == 0) return "Ácido clorhídrico";
-    if (strcmp(compuesto, "H2SO4") == 0) return "Ácido sulfúrico";
-    if (strcmp(compuesto, "HNO3") == 0) return "Ácido nítrico";
-    if (strcmp(compuesto, "H3PO4") == 0) return "Ácido fosfórico";
-    if (strcmp(compuesto, "H2CO2") == 0) return "Ácido carbónico";
-    if (strcmp(compuesto, "HF") == 0) return "Ácido fluorhídrico";
-    if (strcmp(compuesto, "HBr") == 0) return "Ácido bromhídrico";
-    if (strcmp(compuesto, "HI") == 0) return "Ácido yodhídrico";
-    if (strcmp(compuesto, "HCN") == 0) return "Ácido cianhídrico";
-    if (strcmp(compuesto, "H2S") == 0) return "Ácido sulfhídrico";
     if (strcmp(compuesto, "H2O2") == 0) return "Peróxido de hidrógeno";
     if (strcmp(compuesto, "O3") == 0) return "Ozono";
     if (strcmp(compuesto, "NaHCO3") == 0) return "Bicarbonato de sodio";
     if (strcmp(compuesto, "NaOH") == 0) return "Hidróxido de sodio";
     if (strcmp(compuesto, "KOH") == 0) return "Hidróxido de potasio";
-    if (strcmp(compuesto, "N2O") == 0) return "Óxido nitroso";
     if (strcmp(compuesto, "C6H12O6") == 0) return "Glucosa";
     if (strcmp(compuesto, "C2H6O") == 0) return "Etanol";
     if (strcmp(compuesto, "C6H6") == 0) return "Benceno";
@@ -290,7 +286,7 @@ char* es_acido(const char* compuesto) {
 }
 
 char* es_oxido(const char* compuesto) {
-    printf("Verificando si es un óxido: %s\n", compuesto); // Depuración
+    //printf("Verificando si es un óxido: %s\n", compuesto); // Depuración
 
     int len = strlen(compuesto);
     char simbolo_elemento[10] = {0};

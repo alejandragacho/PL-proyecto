@@ -518,8 +518,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    39,    39,    43,    44,    48,    55,    56,    57,    90,
-      97,   103,   110
+       0,    39,    39,    43,    44,    48,    55,    59,    65,    98,
+     106,   113,   117
 };
 #endif
 
@@ -570,8 +570,8 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     6,     0,     2,     3,     5,     8,    12,     7,    11,
-       1,     0,    10,     9,     4
+       0,     6,     0,     2,     3,     5,     8,    11,     7,     9,
+       1,     0,    12,    10,     4
 };
 
 /* YYPGOTO[NTERM-NUM].  */
@@ -619,8 +619,8 @@ static const yytype_int8 yyr1[] =
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     1,     3,     1,     1,     2,     1,     3,
-       2,     2,     1
+       0,     2,     1,     1,     3,     1,     1,     2,     1,     2,
+       3,     1,     2
 };
 
 
@@ -1370,20 +1370,28 @@ yyreduce:
 
   case 6: /* compuesto: ELEMENTO  */
 #line 55 "proyecto.y"
-            { printf( "%s\n", get_componente((yyvsp[0].str))); }
-#line 1375 "proyecto.tab.c"
+             { 
+        printf("Fórmula: %s\n", (yyvsp[0].str)); 
+        (yyval.str) = strdup(get_componente((yyvsp[0].str))); 
+    }
+#line 1378 "proyecto.tab.c"
     break;
 
   case 7: /* compuesto: ELEMENTO SUBINDICE  */
-#line 56 "proyecto.y"
-                         { printf("%s%s\n", prefijo((yyvsp[0].num)), get_componente((yyvsp[-1].str)));}
-#line 1381 "proyecto.tab.c"
+#line 59 "proyecto.y"
+                         { 
+        printf("Fórmula: %s%d\n", (yyvsp[-1].str), (yyvsp[0].num)); 
+        char* aux = concat(prefijo((yyvsp[0].num)), get_componente((yyvsp[-1].str)), "");  
+        (yyval.str) = strdup(aux); 
+        free(aux);
+    }
+#line 1389 "proyecto.tab.c"
     break;
 
   case 8: /* compuesto: secuencia_elementos  */
-#line 57 "proyecto.y"
+#line 65 "proyecto.y"
                         {
-        printf("Compuesto recibido: %s\n", (yyvsp[0].str));
+        //printf("Compuesto recibido: %s\n", $1);
 
         // 1. Verificar si el compuesto tiene un nombre trivial
         char* nombre_comun = nombre_trivial((yyvsp[0].str));
@@ -1411,11 +1419,23 @@ yyreduce:
         }
         free((yyvsp[0].str));
     }
-#line 1415 "proyecto.tab.c"
+#line 1423 "proyecto.tab.c"
     break;
 
-  case 9: /* secuencia_elementos: ELEMENTO SUBINDICE secuencia_elementos  */
-#line 90 "proyecto.y"
+  case 9: /* secuencia_elementos: ELEMENTO secuencia_elementos  */
+#line 98 "proyecto.y"
+                                 {
+        char compuesto[200];
+        sprintf(compuesto, "%s%s", (yyvsp[-1].str), (yyvsp[0].str) ? (yyvsp[0].str) : ""); // Concatenar H + S + resto
+        (yyval.str) = strdup(compuesto);
+        free((yyvsp[-1].str));
+        if ((yyvsp[0].str)) free((yyvsp[0].str));
+    }
+#line 1435 "proyecto.tab.c"
+    break;
+
+  case 10: /* secuencia_elementos: ELEMENTO SUBINDICE secuencia_elementos  */
+#line 106 "proyecto.y"
                                            {
         char compuesto[200];
         sprintf(compuesto, "%s%d%s", (yyvsp[-2].str), (yyvsp[-1].num), (yyvsp[0].str) ? (yyvsp[0].str) : ""); // Concatenar H2 + S + resto
@@ -1423,43 +1443,31 @@ yyreduce:
         free((yyvsp[-2].str));
         if ((yyvsp[0].str)) free((yyvsp[0].str));
     }
-#line 1427 "proyecto.tab.c"
+#line 1447 "proyecto.tab.c"
     break;
 
-  case 10: /* secuencia_elementos: ELEMENTO SUBINDICE  */
-#line 97 "proyecto.y"
+  case 11: /* secuencia_elementos: ELEMENTO  */
+#line 113 "proyecto.y"
+                {
+        (yyval.str) = strdup((yyvsp[0].str)); // Ejemplo: H o S solos
+        free((yyvsp[0].str));
+    }
+#line 1456 "proyecto.tab.c"
+    break;
+
+  case 12: /* secuencia_elementos: ELEMENTO SUBINDICE  */
+#line 117 "proyecto.y"
                          {
         char compuesto[50];
         sprintf(compuesto, "%s%d", (yyvsp[-1].str), (yyvsp[0].num)); // Ejemplo: H2
         (yyval.str) = strdup(compuesto);
         free((yyvsp[-1].str));
     }
-#line 1438 "proyecto.tab.c"
-    break;
-
-  case 11: /* secuencia_elementos: ELEMENTO secuencia_elementos  */
-#line 103 "proyecto.y"
-                                   {
-        char compuesto[200];
-        sprintf(compuesto, "%s%s", (yyvsp[-1].str), (yyvsp[0].str) ? (yyvsp[0].str) : ""); // Concatenar H + S + resto
-        (yyval.str) = strdup(compuesto);
-        free((yyvsp[-1].str));
-        if ((yyvsp[0].str)) free((yyvsp[0].str));
-    }
-#line 1450 "proyecto.tab.c"
-    break;
-
-  case 12: /* secuencia_elementos: ELEMENTO  */
-#line 110 "proyecto.y"
-               {
-        (yyval.str) = strdup((yyvsp[0].str)); // Ejemplo: H o S solos
-        free((yyvsp[0].str));
-    }
-#line 1459 "proyecto.tab.c"
+#line 1467 "proyecto.tab.c"
     break;
 
 
-#line 1463 "proyecto.tab.c"
+#line 1471 "proyecto.tab.c"
 
       default: break;
     }
@@ -1683,7 +1691,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 116 "proyecto.y"
+#line 125 "proyecto.y"
 
 
 char* get_componente(char* simbolo) {
@@ -1744,7 +1752,6 @@ char* get_componente(char* simbolo) {
 char* nombre_trivial(const char* compuesto) {
     printf("Fórmula:  %s\n", compuesto);
     if (strcmp(compuesto, "H2O") == 0) return "Agua";
-    if (strcmp(compuesto, "CO2") == 0) return "Dióxido de carbono";
     if (strcmp(compuesto, "NH3") == 0) return "Amoníaco";
     if (strcmp(compuesto, "CH4") == 0) return "Metano";
     if (strcmp(compuesto, "C2H6") == 0) return "Etano";
@@ -1752,24 +1759,12 @@ char* nombre_trivial(const char* compuesto) {
     if (strcmp(compuesto, "C4H10") == 0) return "Butano";
     if (strcmp(compuesto, "PH3") == 0) return "Fosfina";
     if (strcmp(compuesto, "SiH4") == 0) return "Silano";
-    if (strcmp(compuesto, "CO") == 0) return "Monóxido de carbono";
     if (strcmp(compuesto, "NaCl") == 0) return "Cloruro de sodio (sal de mesa)";
-    if (strcmp(compuesto, "HCl") == 0) return "Ácido clorhídrico";
-    if (strcmp(compuesto, "H2SO4") == 0) return "Ácido sulfúrico";
-    if (strcmp(compuesto, "HNO3") == 0) return "Ácido nítrico";
-    if (strcmp(compuesto, "H3PO4") == 0) return "Ácido fosfórico";
-    if (strcmp(compuesto, "H2CO2") == 0) return "Ácido carbónico";
-    if (strcmp(compuesto, "HF") == 0) return "Ácido fluorhídrico";
-    if (strcmp(compuesto, "HBr") == 0) return "Ácido bromhídrico";
-    if (strcmp(compuesto, "HI") == 0) return "Ácido yodhídrico";
-    if (strcmp(compuesto, "HCN") == 0) return "Ácido cianhídrico";
-    if (strcmp(compuesto, "H2S") == 0) return "Ácido sulfhídrico";
     if (strcmp(compuesto, "H2O2") == 0) return "Peróxido de hidrógeno";
     if (strcmp(compuesto, "O3") == 0) return "Ozono";
     if (strcmp(compuesto, "NaHCO3") == 0) return "Bicarbonato de sodio";
     if (strcmp(compuesto, "NaOH") == 0) return "Hidróxido de sodio";
     if (strcmp(compuesto, "KOH") == 0) return "Hidróxido de potasio";
-    if (strcmp(compuesto, "N2O") == 0) return "Óxido nitroso";
     if (strcmp(compuesto, "C6H12O6") == 0) return "Glucosa";
     if (strcmp(compuesto, "C2H6O") == 0) return "Etanol";
     if (strcmp(compuesto, "C6H6") == 0) return "Benceno";
@@ -1861,7 +1856,7 @@ char* es_acido(const char* compuesto) {
 }
 
 char* es_oxido(const char* compuesto) {
-    printf("Verificando si es un óxido: %s\n", compuesto); // Depuración
+    //printf("Verificando si es un óxido: %s\n", compuesto); // Depuración
 
     int len = strlen(compuesto);
     char simbolo_elemento[10] = {0};
