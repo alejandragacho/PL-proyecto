@@ -56,9 +56,7 @@ extern int yydebug;
     YYUNDEF = 257,                 /* "invalid token"  */
     ELEMENTO = 258,                /* ELEMENTO  */
     SUBINDICE = 259,               /* SUBINDICE  */
-    SALTO = 260,                   /* SALTO  */
-    LPAREN = 261,                  /* LPAREN  */
-    RPAREN = 262                   /* RPAREN  */
+    SALTO = 260                    /* SALTO  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -70,19 +68,17 @@ extern int yydebug;
 #define ELEMENTO 258
 #define SUBINDICE 259
 #define SALTO 260
-#define LPAREN 261
-#define RPAREN 262
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 26 "proyecto.y"
+#line 25 "proyecto.y"
 
     char* str;
     int num;
 
-#line 86 "proyecto.tab.h"
+#line 82 "proyecto.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

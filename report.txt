@@ -1,0 +1,243 @@
+Terminales no usados en la gramática
+
+    LPAREN
+    RPAREN
+
+
+Estado 1 conflictos: 2 reducción/reducción
+Estado 8 conflictos: 2 reducción/reducción
+
+
+Gramática
+
+    0 $accept: S $end
+
+    1 S: fichero
+
+    2 fichero: formula
+    3        | formula SALTO fichero
+
+    4 formula: compuesto
+
+    5 compuesto: ELEMENTO
+    6          | ELEMENTO SUBINDICE
+    7          | secuencia_elementos
+
+    8 secuencia_elementos: ELEMENTO secuencia_elementos
+    9                    | ELEMENTO SUBINDICE secuencia_elementos
+   10                    | ELEMENTO
+   11                    | ELEMENTO SUBINDICE
+
+
+Terminales con las reglas donde aparecen
+
+    $end (0) 0
+    error (256)
+    ELEMENTO <str> (258) 5 6 8 9 10 11
+    SUBINDICE <num> (259) 6 9 11
+    SALTO (260) 3
+    LPAREN (261)
+    RPAREN (262)
+
+
+No terminales con las reglas donde aparecen
+
+    $accept (8)
+        on left: 0
+    S (9)
+        on left: 1
+        on right: 0
+    fichero (10)
+        on left: 2 3
+        on right: 1 3
+    formula (11)
+        on left: 4
+        on right: 2 3
+    compuesto <str> (12)
+        on left: 5 6 7
+        on right: 4
+    secuencia_elementos <str> (13)
+        on left: 8 9 10 11
+        on right: 7 8 9
+
+
+Estado 0
+
+    0 $accept: • S $end
+
+    ELEMENTO  desplazar e ir al estado 1
+
+    S                    ir al estado 2
+    fichero              ir al estado 3
+    formula              ir al estado 4
+    compuesto            ir al estado 5
+    secuencia_elementos  ir al estado 6
+
+
+Estado 1
+
+    5 compuesto: ELEMENTO •
+    6          | ELEMENTO • SUBINDICE
+    8 secuencia_elementos: ELEMENTO • secuencia_elementos
+    9                    | ELEMENTO • SUBINDICE secuencia_elementos
+   10                    | ELEMENTO •
+   11                    | ELEMENTO • SUBINDICE
+
+    ELEMENTO   desplazar e ir al estado 7
+    SUBINDICE  desplazar e ir al estado 8
+
+    $end      reduce usando la regla 5 (compuesto)
+    $end      [reduce usando la regla 10 (secuencia_elementos)]
+    SALTO     reduce usando la regla 5 (compuesto)
+    SALTO     [reduce usando la regla 10 (secuencia_elementos)]
+    $default  reduce usando la regla 5 (compuesto)
+
+    secuencia_elementos  ir al estado 9
+
+    reduce/reduce conflict on tokens $end, SALTO:
+        5 compuesto: ELEMENTO •
+       10 secuencia_elementos: ELEMENTO •
+      Example: ELEMENTO •
+      First reduce derivation
+        compuesto
+        ↳ 5: ELEMENTO •
+      Second reduce derivation
+        compuesto
+        ↳ 7: secuencia_elementos
+             ↳ 10: ELEMENTO •
+
+
+
+Estado 2
+
+    0 $accept: S • $end
+
+    $end  desplazar e ir al estado 10
+
+
+Estado 3
+
+    1 S: fichero •
+
+    $default  reduce usando la regla 1 (S)
+
+
+Estado 4
+
+    2 fichero: formula •
+    3        | formula • SALTO fichero
+
+    SALTO  desplazar e ir al estado 11
+
+    $default  reduce usando la regla 2 (fichero)
+
+
+Estado 5
+
+    4 formula: compuesto •
+
+    $default  reduce usando la regla 4 (formula)
+
+
+Estado 6
+
+    7 compuesto: secuencia_elementos •
+
+    $default  reduce usando la regla 7 (compuesto)
+
+
+Estado 7
+
+    8 secuencia_elementos: ELEMENTO • secuencia_elementos
+    9                    | ELEMENTO • SUBINDICE secuencia_elementos
+   10                    | ELEMENTO •
+   11                    | ELEMENTO • SUBINDICE
+
+    ELEMENTO   desplazar e ir al estado 7
+    SUBINDICE  desplazar e ir al estado 12
+
+    $default  reduce usando la regla 10 (secuencia_elementos)
+
+    secuencia_elementos  ir al estado 9
+
+
+Estado 8
+
+    6 compuesto: ELEMENTO SUBINDICE •
+    9 secuencia_elementos: ELEMENTO SUBINDICE • secuencia_elementos
+   11                    | ELEMENTO SUBINDICE •
+
+    ELEMENTO  desplazar e ir al estado 7
+
+    $end      reduce usando la regla 6 (compuesto)
+    $end      [reduce usando la regla 11 (secuencia_elementos)]
+    SALTO     reduce usando la regla 6 (compuesto)
+    SALTO     [reduce usando la regla 11 (secuencia_elementos)]
+    $default  reduce usando la regla 6 (compuesto)
+
+    secuencia_elementos  ir al estado 13
+
+    reduce/reduce conflict on tokens $end, SALTO:
+        6 compuesto: ELEMENTO SUBINDICE •
+       11 secuencia_elementos: ELEMENTO SUBINDICE •
+      Example: ELEMENTO SUBINDICE •
+      First reduce derivation
+        compuesto
+        ↳ 6: ELEMENTO SUBINDICE •
+      Second reduce derivation
+        compuesto
+        ↳ 7: secuencia_elementos
+             ↳ 11: ELEMENTO SUBINDICE •
+
+
+
+Estado 9
+
+    8 secuencia_elementos: ELEMENTO secuencia_elementos •
+
+    $default  reduce usando la regla 8 (secuencia_elementos)
+
+
+Estado 10
+
+    0 $accept: S $end •
+
+    $default  aceptar
+
+
+Estado 11
+
+    3 fichero: formula SALTO • fichero
+
+    ELEMENTO  desplazar e ir al estado 1
+
+    fichero              ir al estado 14
+    formula              ir al estado 4
+    compuesto            ir al estado 5
+    secuencia_elementos  ir al estado 6
+
+
+Estado 12
+
+    9 secuencia_elementos: ELEMENTO SUBINDICE • secuencia_elementos
+   11                    | ELEMENTO SUBINDICE •
+
+    ELEMENTO  desplazar e ir al estado 7
+
+    $default  reduce usando la regla 11 (secuencia_elementos)
+
+    secuencia_elementos  ir al estado 13
+
+
+Estado 13
+
+    9 secuencia_elementos: ELEMENTO SUBINDICE secuencia_elementos •
+
+    $default  reduce usando la regla 9 (secuencia_elementos)
+
+
+Estado 14
+
+    3 fichero: formula SALTO fichero •
+
+    $default  reduce usando la regla 3 (fichero)

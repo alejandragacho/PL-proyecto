@@ -6,7 +6,7 @@ all: compile run
 
 compile:
 	flex $(FUENTE).l
-	bison -o $(FUENTE).tab.c $(FUENTE).y -yd
+	bison -o $(FUENTE).tab.c $(FUENTE).y -yd --verbose
 	gcc -o $(FUENTE) lex.yy.c $(FUENTE).tab.c -$(LIB) -lfl
 
 run:

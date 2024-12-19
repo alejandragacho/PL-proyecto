@@ -1,11 +1,3 @@
-La regla es inútil debido a los conflictos
-
-    8 secuencia_elementos: ELEMENTO SUBINDICE
-
-
-Estado 7 conflictos: 2 reducción/reducción
-
-
 Gramática
 
     0 $accept: S $end
@@ -17,20 +9,21 @@ Gramática
 
     4 formula: compuesto
 
-    5 compuesto: secuencia_elementos
+    5 compuesto: secuencia
 
-    6 secuencia_elementos: ε
-    7                    | ELEMENTO SUBINDICE secuencia_elementos
-    8                    | ELEMENTO SUBINDICE
-    9                    | ELEMENTO
+    6 elemento_simple: ELEMENTO
+    7                | ELEMENTO SUBINDICE
+
+    8 secuencia: elemento_simple secuencia
+    9          | elemento_simple
 
 
 Terminales con las reglas donde aparecen
 
     $end (0) 0
     error (256)
-    ELEMENTO <str> (258) 7 8 9
-    SUBINDICE <num> (259) 7 8
+    ELEMENTO <str> (258) 6 7
+    SUBINDICE <num> (259) 7
     SALTO (260) 3
 
 
@@ -50,9 +43,12 @@ No terminales con las reglas donde aparecen
     compuesto <str> (10)
         on left: 5
         on right: 4
-    secuencia_elementos <str> (11)
-        on left: 6 7 8 9
-        on right: 5 7
+    elemento_simple <str> (11)
+        on left: 6 7
+        on right: 8 9
+    secuencia <str> (12)
+        on left: 8 9
+        on right: 5 8
 
 
 Estado 0
@@ -61,31 +57,29 @@ Estado 0
 
     ELEMENTO  desplazar e ir al estado 1
 
-    $default  reduce usando la regla 6 (secuencia_elementos)
-
-    S                    ir al estado 2
-    fichero              ir al estado 3
-    formula              ir al estado 4
-    compuesto            ir al estado 5
-    secuencia_elementos  ir al estado 6
+    S                ir al estado 2
+    fichero          ir al estado 3
+    formula          ir al estado 4
+    compuesto        ir al estado 5
+    elemento_simple  ir al estado 6
+    secuencia        ir al estado 7
 
 
 Estado 1
 
-    7 secuencia_elementos: ELEMENTO • SUBINDICE secuencia_elementos
-    8                    | ELEMENTO • SUBINDICE
-    9                    | ELEMENTO •
+    6 elemento_simple: ELEMENTO •
+    7                | ELEMENTO • SUBINDICE
 
-    SUBINDICE  desplazar e ir al estado 7
+    SUBINDICE  desplazar e ir al estado 8
 
-    $default  reduce usando la regla 9 (secuencia_elementos)
+    $default  reduce usando la regla 6 (elemento_simple)
 
 
 Estado 2
 
     0 $accept: S • $end
 
-    $end  desplazar e ir al estado 8
+    $end  desplazar e ir al estado 9
 
 
 Estado 3
@@ -100,7 +94,7 @@ Estado 4
     2 fichero: formula •
     3        | formula • SALTO fichero
 
-    SALTO  desplazar e ir al estado 9
+    SALTO  desplazar e ir al estado 10
 
     $default  reduce usando la regla 2 (fichero)
 
@@ -114,56 +108,59 @@ Estado 5
 
 Estado 6
 
-    5 compuesto: secuencia_elementos •
+    8 secuencia: elemento_simple • secuencia
+    9          | elemento_simple •
 
-    $default  reduce usando la regla 5 (compuesto)
+    ELEMENTO  desplazar e ir al estado 1
+
+    $default  reduce usando la regla 9 (secuencia)
+
+    elemento_simple  ir al estado 6
+    secuencia        ir al estado 11
 
 
 Estado 7
 
-    7 secuencia_elementos: ELEMENTO SUBINDICE • secuencia_elementos
-    8                    | ELEMENTO SUBINDICE •
+    5 compuesto: secuencia •
 
-    ELEMENTO  desplazar e ir al estado 1
-
-    $end      reduce usando la regla 6 (secuencia_elementos)
-    $end      [reduce usando la regla 8 (secuencia_elementos)]
-    SALTO     reduce usando la regla 6 (secuencia_elementos)
-    SALTO     [reduce usando la regla 8 (secuencia_elementos)]
-    $default  reduce usando la regla 6 (secuencia_elementos)
-
-    secuencia_elementos  ir al estado 10
+    $default  reduce usando la regla 5 (compuesto)
 
 
 Estado 8
+
+    7 elemento_simple: ELEMENTO SUBINDICE •
+
+    $default  reduce usando la regla 7 (elemento_simple)
+
+
+Estado 9
 
     0 $accept: S $end •
 
     $default  aceptar
 
 
-Estado 9
+Estado 10
 
     3 fichero: formula SALTO • fichero
 
     ELEMENTO  desplazar e ir al estado 1
 
-    $default  reduce usando la regla 6 (secuencia_elementos)
-
-    fichero              ir al estado 11
-    formula              ir al estado 4
-    compuesto            ir al estado 5
-    secuencia_elementos  ir al estado 6
-
-
-Estado 10
-
-    7 secuencia_elementos: ELEMENTO SUBINDICE secuencia_elementos •
-
-    $default  reduce usando la regla 7 (secuencia_elementos)
+    fichero          ir al estado 12
+    formula          ir al estado 4
+    compuesto        ir al estado 5
+    elemento_simple  ir al estado 6
+    secuencia        ir al estado 7
 
 
 Estado 11
+
+    8 secuencia: elemento_simple secuencia •
+
+    $default  reduce usando la regla 8 (secuencia)
+
+
+Estado 12
 
     3 fichero: formula SALTO fichero •
 
