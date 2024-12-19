@@ -1,16 +1,12 @@
-CuF
-H2O
-C6H6
-NaCl
-KOH
-O
-He
-ClO
-O2
-H2
-Na3
-ClO2
-N2O
-CO
-CO2
-HCl
+Alejandra Gacho y Aldara Iglesias Sánchez
+
+Este proyecto trata de convertir fórmulas químicas (H20, CO2...) a texto (Agua, Dióxido de carbono).
+Hemos usado únicamente recursividad por la derecha, porque al no ser posible procesar los compuestos de izquierda a derecha, habría que guardarlos en memoria y seguidamente procesarlos en el orden correcto, lo que podría causar graves errores en la ejecución.
+Los compuestos se separan entre si por el no-terminal SALTO que es un salto de línea, un espacio en blanco o un tabulador (o varios) y que se reconoce en el .l (\n).
+Además del SALTO, en el análisis léxico se reconocen una serie de elementos de la tabla periódica. Hemos optado por investigar cuáles son los 50 elementos más usados e incluir únicamente estos.
+Por otra parte, los números se reconocen como subíndices, y pueden ser o una unidad, o varias (1, 11, 9, 18...); el resto de casos que no se incluyen se considerarán errores léxicos. Por ejemplo, si tenemos Ó no se reconocerá porque no es un elemento existente en la tabla periódica.
+
+En cuanto a las reglas, S, el axioma es el fichero completo.
+[...]
+Debido a la posibilidad de que un elemento pudiera meterse por secuencia_elementos, hemos excluido este caso en secuencia_elementos y hemos considerado todas las casuísticas de dos elementos con o sin subíndices, que formarían un compuesto. 
+Este caso nos causaba conflictos y por eso hemos implementado las reglas de secuencia_elementos de esta manera.

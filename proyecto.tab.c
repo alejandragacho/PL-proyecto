@@ -69,7 +69,6 @@
 /* First part of user prologue.  */
 #line 1 "proyecto.y"
 
-/* Código C inicial: incluye y funciones auxiliares */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -89,6 +88,7 @@ char* hidruro_metalico(const char* compuesto);
 char* es_acido(const char* compuesto);
 char* es_oxido(const char* compuesto);
 char* generar_binario(const char* compuesto);
+
 
 #line 94 "proyecto.tab.c"
 
@@ -124,13 +124,13 @@ enum yysymbol_kind_t
   YYSYMBOL_ELEMENTO = 3,                   /* ELEMENTO  */
   YYSYMBOL_SUBINDICE = 4,                  /* SUBINDICE  */
   YYSYMBOL_SALTO = 5,                      /* SALTO  */
-  YYSYMBOL_YYACCEPT = 6,                   /* $accept  */
-  YYSYMBOL_S = 7,                          /* S  */
-  YYSYMBOL_fichero = 8,                    /* fichero  */
-  YYSYMBOL_formula = 9,                    /* formula  */
-  YYSYMBOL_compuesto = 10,                 /* compuesto  */
-  YYSYMBOL_elemento_simple = 11,           /* elemento_simple  */
-  YYSYMBOL_secuencia = 12                  /* secuencia  */
+  YYSYMBOL_LPAREN = 6,                     /* LPAREN  */
+  YYSYMBOL_RPAREN = 7,                     /* RPAREN  */
+  YYSYMBOL_YYACCEPT = 8,                   /* $accept  */
+  YYSYMBOL_S = 9,                          /* S  */
+  YYSYMBOL_fichero = 10,                   /* fichero  */
+  YYSYMBOL_compuesto = 11,                 /* compuesto  */
+  YYSYMBOL_secuencia_elementos = 12        /* secuencia_elementos  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -458,19 +458,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  9
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   6
+#define YYLAST   15
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  6
+#define YYNTOKENS  8
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  7
+#define YYNNTS  5
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  10
+#define YYNRULES  13
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  13
+#define YYNSTATES  16
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   260
+#define YYMAXUTOK   262
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -510,15 +510,15 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5
+       5,     6,     7
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    40,    40,    44,    45,    49,    59,    63,    66,    75,
-      82
+       0,    39,    39,    43,    44,    48,    52,    56,    88,    94,
+     100,   106,   112,   120
 };
 #endif
 
@@ -535,8 +535,8 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
 static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "ELEMENTO",
-  "SUBINDICE", "SALTO", "$accept", "S", "fichero", "formula", "compuesto",
-  "elemento_simple", "secuencia", YY_NULLPTR
+  "SUBINDICE", "SALTO", "LPAREN", "RPAREN", "$accept", "S", "fichero",
+  "compuesto", "secuencia_elementos", YY_NULLPTR
 };
 
 static const char *
@@ -560,8 +560,8 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -3,    -2,     1,    -8,    -1,    -8,    -3,    -8,    -8,    -8,
-      -3,    -8,    -8
+       3,    -2,    12,    -8,     8,    -8,     1,    11,    -8,    -8,
+       3,    11,     5,    -8,    -8,    11
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -569,20 +569,20 @@ static const yytype_int8 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     7,     0,     2,     3,     5,    10,     6,     8,     1,
-       0,     9,     4
+       0,     5,     0,     2,     3,     7,     8,     6,    12,     1,
+       0,     9,    10,    13,     4,    11
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -8,    -8,    -7,    -8,    -8,    -8,     0
+      -8,    -8,    -7,    -8,     0
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     3,     4,     5,     6,     7
+       0,     2,     3,     4,     8
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -590,34 +590,36 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       1,     9,     8,    12,    10,     0,    11
+       5,     6,     7,    14,     6,    11,     1,    13,     6,    15,
+       5,    13,     9,    10,    12,    13
 };
 
 static const yytype_int8 yycheck[] =
 {
-       3,     0,     4,    10,     5,    -1,     6
+       0,     3,     4,    10,     3,     4,     3,     7,     3,     4,
+      10,    11,     0,     5,     3,    15
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,     7,     8,     9,    10,    11,    12,     4,     0,
-       5,    12,     8
+       0,     3,     9,    10,    11,    12,     3,     4,    12,     0,
+       5,     4,     3,    12,    10,     4
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,     6,     7,     8,     8,     9,    10,    11,    11,    12,
-      12
+       0,     8,     9,    10,    10,    11,    11,    11,    12,    12,
+      12,    12,    12,    12
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     1,     3,     1,     1,     1,     2,     2,
-       1
+       0,     2,     1,     1,     3,     1,     2,     1,     2,     3,
+       3,     4,     2,     3
 };
 
 
@@ -1351,62 +1353,132 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* S: fichero  */
-#line 40 "proyecto.y"
-            { printf("Fin del fichero.\n"); return 0; }
-#line 1357 "proyecto.tab.c"
+#line 39 "proyecto.y"
+            { printf("Fin del fichero.\n"); return 0;}
+#line 1359 "proyecto.tab.c"
     break;
 
-  case 5: /* formula: compuesto  */
-#line 49 "proyecto.y"
-              {
-        printf("Fórmula: %s\n", (yyvsp[0].str));          // Fórmula original de entrada
-        printf("Resultado: %s\n\n", (yyvsp[0].str));     // Resultado procesado
-        free((yyvsp[0].str));                            // Liberar memoria asignada
+  case 5: /* compuesto: ELEMENTO  */
+#line 48 "proyecto.y"
+            { 
+        printf("Fórmula: %s\n", (yyvsp[0].str)); 
+        printf("Resultado: %s\n\n", get_componente((yyvsp[0].str)));
     }
-#line 1367 "proyecto.tab.c"
+#line 1368 "proyecto.tab.c"
     break;
 
-  case 7: /* elemento_simple: ELEMENTO  */
-#line 63 "proyecto.y"
-             {
-        (yyval.str) = strdup((yyvsp[0].str)); // Mantén el elemento original
+  case 6: /* compuesto: ELEMENTO SUBINDICE  */
+#line 52 "proyecto.y"
+                        { 
+        printf("Fórmula: %s%d\n", (yyvsp[-1].str), (yyvsp[0].num));  
+        printf("Resultado: %s\n\n", concat(prefijo((yyvsp[0].num)), get_componente((yyvsp[-1].str)), ""));
     }
-#line 1375 "proyecto.tab.c"
+#line 1377 "proyecto.tab.c"
     break;
 
-  case 8: /* elemento_simple: ELEMENTO SUBINDICE  */
-#line 66 "proyecto.y"
-                         {
-        char original[50];
-        sprintf(original, "%s%d", (yyvsp[-1].str), (yyvsp[0].num)); // Ejemplo: H2
-        (yyval.str) = strdup(original);
+  case 7: /* compuesto: secuencia_elementos  */
+#line 56 "proyecto.y"
+                        {
+
+        // 1. Verificar si el compuesto tiene un nombre trivial
+        char* nombre_comun = nombre_trivial((yyvsp[0].str));
+        if (nombre_comun) {
+            printf("Resultado: %s\n\n", nombre_comun);
+        } else {
+            // 2. Verificar si es un ácido hidrácido
+            char* acido = es_acido((yyvsp[0].str));
+            if (acido) {
+                printf("Resultado: %s\n\n", acido);
+                free(acido);
+            } else {
+                // 3. Verificar si es un óxido
+                char* oxido = es_oxido((yyvsp[0].str));
+                if (oxido) {
+                    printf("Resultado: %s\n\n", oxido);
+                    free(oxido);
+                } else {
+                    // 4. Si no es ninguna de las anteriores, asumir "–uro de"
+                    char* binario = generar_binario((yyvsp[0].str));
+                    printf("Resultado: %s\n\n", binario);
+                    free(binario);
+                }
+            }
+        }
+        free((yyvsp[0].str));
     }
-#line 1385 "proyecto.tab.c"
+#line 1410 "proyecto.tab.c"
     break;
 
-  case 9: /* secuencia: elemento_simple secuencia  */
-#line 75 "proyecto.y"
-                              {
+  case 8: /* secuencia_elementos: ELEMENTO ELEMENTO  */
+#line 88 "proyecto.y"
+                      {
         char compuesto[200];
-        sprintf(compuesto, "%s%s", (yyvsp[-1].str), (yyvsp[0].str) ? (yyvsp[0].str) : "");
+        sprintf(compuesto, "%s%s", (yyvsp[-1].str), (yyvsp[0].str)); // Concatenar H + S 
+        (yyval.str) = strdup(compuesto); // Ejemplo: H o S solos
+        free((yyvsp[-1].str));
+    }
+#line 1421 "proyecto.tab.c"
+    break;
+
+  case 9: /* secuencia_elementos: ELEMENTO ELEMENTO SUBINDICE  */
+#line 94 "proyecto.y"
+                                 {
+        char compuesto[200];
+        sprintf(compuesto, "%s%s%d", (yyvsp[-2].str), (yyvsp[-1].str), (yyvsp[0].num)); // Concatenar H + S2
+        (yyval.str) = strdup(compuesto); // Ejemplo: H o S solos
+        free((yyvsp[-2].str)); free((yyvsp[-1].str));
+    }
+#line 1432 "proyecto.tab.c"
+    break;
+
+  case 10: /* secuencia_elementos: ELEMENTO SUBINDICE ELEMENTO  */
+#line 100 "proyecto.y"
+                                  {
+        char compuesto[50];
+        sprintf(compuesto, "%s%d%s", (yyvsp[-2].str), (yyvsp[-1].num), (yyvsp[0].str)); // Ejemplo: H2 + H
+        (yyval.str) = strdup(compuesto);
+        free((yyvsp[-2].str)); free((yyvsp[0].str));
+    }
+#line 1443 "proyecto.tab.c"
+    break;
+
+  case 11: /* secuencia_elementos: ELEMENTO SUBINDICE ELEMENTO SUBINDICE  */
+#line 106 "proyecto.y"
+                                           {
+        char compuesto[50];
+        sprintf(compuesto, "%s%d%s%d", (yyvsp[-3].str), (yyvsp[-2].num), (yyvsp[-1].str), (yyvsp[0].num)); // Ejemplo: H2 + H2
+        (yyval.str) = strdup(compuesto);
+        free((yyvsp[-3].str)); free((yyvsp[-1].str)); 
+    }
+#line 1454 "proyecto.tab.c"
+    break;
+
+  case 12: /* secuencia_elementos: ELEMENTO secuencia_elementos  */
+#line 112 "proyecto.y"
+                                  {
+        char compuesto[200];
+        sprintf(compuesto, "%s%s", (yyvsp[-1].str), (yyvsp[0].str) ? (yyvsp[0].str) : ""); // Concatenar H + S + resto
         (yyval.str) = strdup(compuesto);
         free((yyvsp[-1].str));
         if ((yyvsp[0].str)) free((yyvsp[0].str));
     }
-#line 1397 "proyecto.tab.c"
+#line 1466 "proyecto.tab.c"
     break;
 
-  case 10: /* secuencia: elemento_simple  */
-#line 82 "proyecto.y"
-                      {
-        (yyval.str) = strdup((yyvsp[0].str));
-        free((yyvsp[0].str));
+  case 13: /* secuencia_elementos: ELEMENTO SUBINDICE secuencia_elementos  */
+#line 120 "proyecto.y"
+                                           {
+        char compuesto[200];
+        sprintf(compuesto, "%s%d%s", (yyvsp[-2].str), (yyvsp[-1].num), (yyvsp[0].str) ? (yyvsp[0].str) : ""); // Concatenar H2 + S + resto
+        (yyval.str) = strdup(compuesto);
+        free((yyvsp[-2].str));
+        if ((yyvsp[0].str)) free((yyvsp[0].str));
     }
-#line 1406 "proyecto.tab.c"
+#line 1478 "proyecto.tab.c"
     break;
 
 
-#line 1410 "proyecto.tab.c"
+#line 1482 "proyecto.tab.c"
 
       default: break;
     }
@@ -1630,9 +1702,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 89 "proyecto.y"
-
-
+#line 130 "proyecto.y"
 
 
 char* get_componente(char* simbolo) {

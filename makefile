@@ -1,5 +1,5 @@
 FUENTE = proyecto
-PRUEBA = memoria.txt
+PRUEBA = pruebas.txt
 LIB = lfl
 
 all: compile run

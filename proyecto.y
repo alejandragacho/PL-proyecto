@@ -40,51 +40,41 @@ S:
 ;
 
 fichero:
-    formula
-    | formula SALTO fichero
-;
-
-formula:
-    compuesto {
-        printf("Resultado: %s\n\n", $1);
-        free($1); // Liberar memoria asignada dinámicamente
-    }
+    compuesto
+    | compuesto SALTO fichero
 ;
 
 compuesto:
-    ELEMENTO { 
+    ELEMENTO{ 
         printf("Fórmula: %s\n", $1); 
-        $$ = strdup(get_componente($1)); 
+        printf("Resultado: %s\n\n", get_componente($1));
     }
-    | ELEMENTO SUBINDICE { 
-        printf("Fórmula: %s%d\n", $1, $2); 
-        char* aux = concat(prefijo($2), get_componente($1), "");  
-        $$ = strdup(aux); 
-        free(aux);
+    | ELEMENTO SUBINDICE{ 
+        printf("Fórmula: %s%d\n", $1, $2);  
+        printf("Resultado: %s\n\n", concat(prefijo($2), get_componente($1), ""));
     }
     |secuencia_elementos{
-        //printf("Compuesto recibido: %s\n", $1);
 
         // 1. Verificar si el compuesto tiene un nombre trivial
         char* nombre_comun = nombre_trivial($1);
         if (nombre_comun) {
-            $$ = strdup(nombre_comun);
+            printf("Resultado: %s\n\n", nombre_comun);
         } else {
             // 2. Verificar si es un ácido hidrácido
             char* acido = es_acido($1);
             if (acido) {
-                $$ = strdup(acido);
+                printf("Resultado: %s\n\n", acido);
                 free(acido);
             } else {
                 // 3. Verificar si es un óxido
                 char* oxido = es_oxido($1);
                 if (oxido) {
-                    $$ = strdup(oxido);
+                    printf("Resultado: %s\n\n", oxido);
                     free(oxido);
                 } else {
                     // 4. Si no es ninguna de las anteriores, asumir "–uro de"
                     char* binario = generar_binario($1);
-                    $$ = strdup(binario);
+                    printf("Resultado: %s\n\n", binario);
                     free(binario);
                 }
             }
@@ -95,7 +85,31 @@ compuesto:
 
 
 secuencia_elementos:
-    ELEMENTO secuencia_elementos {
+    ELEMENTO ELEMENTO {
+        char compuesto[200];
+        sprintf(compuesto, "%s%s", $1, $2); // Concatenar H + S 
+        $$ = strdup(compuesto); // Ejemplo: H o S solos
+        free($1);
+    }
+    | ELEMENTO ELEMENTO SUBINDICE{
+        char compuesto[200];
+        sprintf(compuesto, "%s%s%d", $1, $2, $3); // Concatenar H + S2
+        $$ = strdup(compuesto); // Ejemplo: H o S solos
+        free($1); free($2);
+    }
+    |  ELEMENTO SUBINDICE ELEMENTO{
+        char compuesto[50];
+        sprintf(compuesto, "%s%d%s", $1, $2, $3); // Ejemplo: H2 + H
+        $$ = strdup(compuesto);
+        free($1); free($3);
+    }
+    | ELEMENTO SUBINDICE ELEMENTO SUBINDICE{
+        char compuesto[50];
+        sprintf(compuesto, "%s%d%s%d", $1, $2, $3, $4); // Ejemplo: H2 + H2
+        $$ = strdup(compuesto);
+        free($1); free($3); 
+    }
+    |ELEMENTO secuencia_elementos {
         char compuesto[200];
         sprintf(compuesto, "%s%s", $1, $2 ? $2 : ""); // Concatenar H + S + resto
         $$ = strdup(compuesto);
@@ -110,16 +124,7 @@ secuencia_elementos:
         free($1);
         if ($3) free($3);
     }
-    |  ELEMENTO {
-        $$ = strdup($1); // Ejemplo: H o S solos
-        free($1);
-    }
-    | ELEMENTO SUBINDICE {
-        char compuesto[50];
-        sprintf(compuesto, "%s%d", $1, $2); // Ejemplo: H2
-        $$ = strdup(compuesto);
-        free($1);
-    }
+
 ;
 
 %%
